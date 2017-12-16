@@ -5,14 +5,14 @@ a telegram based chat-bot application for better student awareness
 written as a project assignment during the FMI's JavaScript Advanced 17/18 course
 
 fast links :
-  idea - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/en_idea.txt
-  how to use - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use
+  idea - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/en_idea.txt<br/>
+  how to use - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use<br/>
 
-# repository organization : 
+## repository organization : 
 
-   * `/chat_bot/`<br/>
-                  `/src` - the source for the chatbot written in JavaScript<br />
-                  `/info_base` - the bot's knowledge base example<br />
+   > `/chat_bot/`<br/>
+                  >>`/src` - the source for the chatbot written in JavaScript<br/>
+                  >>`/info_base` - the bot's knowledge base example<br/>
                   
    * `/documentation/`<br />
                       +`/idea` - what the idea is and what problems it solves<br />
