@@ -11,13 +11,13 @@ fast links :
 ## repository organization : 
 
    > `/chat_bot/`<br/>
-                  >>`/src` - the source for the chatbot written in JavaScript<br/>
-                  >>`/info_base` - the bot's knowledge base example<br/>
+                  >> `/src` - the source for the chatbot written in JavaScript<br/>
+                  >> `/info_base` - the bot's knowledge base example<br/>
                   
    * `/documentation/`<br />
-                      +`/idea` - what the idea is and what problems it solves<br />
-                      +`/implementation_details` - information about what was used while writting the code<br />
-                      +`/how_to_use` - guides for both bot user and bot host<br />
+                      * `/idea` - what the idea is and what problems it solves<br />
+                      * `/implementation_details` - information about what was used while writting the code<br />
+                      * `/how_to_use` - guides for both bot user and bot host<br />
                       
 
 # Чатбот за студентите от ФМИ
