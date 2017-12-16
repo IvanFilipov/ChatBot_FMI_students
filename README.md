@@ -10,14 +10,14 @@ fast links :
 
 # repository organization : 
 
-   * `/chat_bot/` 
-                  `/src` - the source for the chatbot written in JavaScript
-                  `/info_base` - the bot's knowledge base example
+   * `/chat_bot/`<br/>
+                  `/src` - the source for the chatbot written in JavaScript<br />
+                  `/info_base` - the bot's knowledge base example<br />
                   
-   * `/documentation/` 
-                      `/idea` - what the idea is and what problems it solves
-                      `/implementation_details` - information about what was used while writting the code
-                      `/how_to_use` - guides for both bot user and bot host
+   * `/documentation/`<br />
+                      `/idea` - what the idea is and what problems it solves<br />
+                      `/implementation_details` - information about what was used while writting the code<br />
+                      `/how_to_use` - guides for both bot user and bot host<br />
                       
 
 # Чатбот за студентите от ФМИ
@@ -33,11 +33,11 @@ fast links :
 
 # организация на хранилището : 
 
-   * `/chat_bot/` 
-                  `/src` - целия код свързан с приложението
-                  `/info_base` - базата от познания на бота
+   * `/chat_bot/`<br />
+                  `/src` - целия код свързан с приложението<br />
+                  `/info_base` - базата от познания на бота<br />
                   
    * `/documentation/` 
-                      `/idea` - каква е идеята, какви проблеми решава
-                      `/implementation_details` - техническа информация за това, което е било използвано, докато е писан кода
-                      `/how_to_use` - наръчници за използването на бота като клиент в чат приложението и като създател и поддържащ бота
+                      `/idea` - каква е идеята, какви проблеми решава<br />
+                      `/implementation_details` - техническа информация за това, което е било използвано, докато е писан кода<br />
+                      `/how_to_use` - наръчници за използването на бота като клиент в чат приложението и като създател и поддържащ бота<br />
