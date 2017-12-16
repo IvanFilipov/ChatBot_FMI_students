@@ -4,7 +4,7 @@ a telegram based chat-bot application for better student awareness
 
 written as a project assignment during the FMI's JavaScript Advanced 17/18 course
 
-fast links :
+fast links :<br/>
   idea - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/en_idea.txt<br/>
   how to use - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use<br/>
 
@@ -27,7 +27,7 @@ fast links :
 
 проектно задание като част от курса "JavaScript за напреднали" 17/18 воден във ФМИ
 
-бързи връзи :
+бързи връзи :<br/>
   идеята - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/бг_идея.txt
   как да използваме - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use
 
