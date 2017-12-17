@@ -28,7 +28,7 @@ fast links :<br/>
 проектно задание като част от курса "JavaScript за напреднали" 17/18 воден във ФМИ
 
 бързи връзи :<br/>
-  идеята - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/бг_идея.txt
+  идеята - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/бг_идея.txt<br/>
   как да използваме - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use
 
 ## организация на хранилището : 
