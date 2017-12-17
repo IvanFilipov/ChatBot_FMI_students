@@ -1,0 +1,27 @@
+Problem :
+
+Nowadays everyone wants to be aware of whatever,
+he can think about, whenever he does, only by one click.
+
+The students from Faculty of Mathematics and Informatics at Sofia University
+don’t make an exception, especially the ones from the courses 
+"Introduction to programming", "Object oriented programming" and 
+"Data structures and algorithms". 
+
+Looking for the easiest and fastest way to get the information they want,
+the students use ‘their everyday tool’ - the social media
+and especially the chats. So they write a message to their teaching assistants,
+whenever the have a question.But here comes the problem …
+those assistants are humans, too , so they need to take their rest,
+and just can be 24/7 available to answer students’ questions.
+This leads to students’ upset, because they expect a synchronic
+communication - after sending their message they want the replay immediately.
+
+The solution : 
+
+Creating an informational chat - bot, which will serve the students’ by being there for them
+all the time. It will answer the most common questions and provide the basic materials
+in order to help the students.
+
+What is more - the chat bot will help with reducing the stress from teaching assistants,
+who will have their time to rest and be more productive during the practices.
