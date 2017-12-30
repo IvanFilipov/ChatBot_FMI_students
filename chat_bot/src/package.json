@@ -1,0 +1,24 @@
+{
+  "name": "fmichatbot",
+  "version": "1.0.0",
+  "description": "a telegram based chatbot for FMI students",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IvanFilipov/ChatBot_FMI_students.git"
+  },
+  "keywords": [
+    "telegram",
+    "chatbot",
+    "FMI"
+  ],
+  "author": "Ivan Filipov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IvanFilipov/ChatBot_FMI_students/issues"
+  },
+  "homepage": "https://github.com/IvanFilipov/ChatBot_FMI_students#readme"
+}
