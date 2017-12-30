@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/IvanFilipov/ChatBot_FMI_students/issues"
   },
-  "homepage": "https://github.com/IvanFilipov/ChatBot_FMI_students#readme"
+  "homepage": "https://github.com/IvanFilipov/ChatBot_FMI_students#readme",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.30.0"
+  }
 }

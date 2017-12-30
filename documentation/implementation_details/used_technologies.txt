@@ -1,2 +1,4 @@
 nodeJS /javaScript - EcmaScript / telegram bot api / ....and a lot of more stuff, which will be added
 while writting the code 
+
+libs : https://github.com/yagop/node-telegram-bot-api
