@@ -55,7 +55,7 @@ const optionsInEnglish = {
 //first message ever
 bot.onText(/\/start/, (msg) => {
     
-    let answer = 'Welcome, ' + msg.chat.first_name + ' '
+    const answer = 'Welcome, ' + msg.chat.first_name + ' '
                              + msg.chat.last_name + '!';
 
                            
@@ -66,7 +66,7 @@ bot.onText(/\/start/, (msg) => {
     console.log(usersStates); 
 
 
-    const opt = new String(optionsInEnglish); //because sendMessage changes its param
+    const opt = JSON.parse(JSON.stringify(optionsInEnglish)); //because sendMessage changes its param
     bot.sendMessage(msg.chat.id, answer, opt);
 
 });
