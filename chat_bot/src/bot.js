@@ -52,6 +52,19 @@ const optionsInEnglish = {
 
 };
 
+const optionsInBulgarian = {
+
+    'reply_markup': {
+
+        'keyboard': [
+            ['Новини'],
+            ['Събития', 'Персонална инфо'],
+            ['Обща информация'],
+            ['Тествай познанията ми']
+        ]
+    }
+}
+
 //first message ever
 bot.onText(/\/start/, (msg) => {
     
@@ -65,8 +78,28 @@ bot.onText(/\/start/, (msg) => {
 
     console.log(usersStates); 
 
+     //because sendMessage changes its param
+     //deep copy objects
+    const opt = JSON.parse(JSON.stringify(optionsInEnglish));
+    bot.sendMessage(msg.chat.id, answer, opt);
 
-    const opt = JSON.parse(JSON.stringify(optionsInEnglish)); //because sendMessage changes its param
+});
+
+//the result parameter is
+//the result of executing exec on the regular expression
+bot.onText(/\/lang (en|bg)/, (msg, res) => {
+    
+
+    let ln = (res[1] === 'bg') ? BG : EN;
+
+    usersStates[msg.chat.id] = ln;
+    
+    const answer = (ln === EN) ? "Now we are talking in english! 🇬🇧󠁧󠁢󠁥󠁮󠁧󠁿" :
+                                 "Вече си говорим на български! 🇧🇬";
+
+    const opt = (ln === EN) ? JSON.parse(JSON.stringify(optionsInEnglish)):
+                            JSON.parse(JSON.stringify(optionsInBulgarian));
+
     bot.sendMessage(msg.chat.id, answer, opt);
 
 });
