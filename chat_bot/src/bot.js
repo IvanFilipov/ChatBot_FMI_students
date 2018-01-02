@@ -1,13 +1,12 @@
 const TelegramBot = require('node-telegram-bot-api');
 
+
+const { BG, EN, commandList, 
+    usersStates, keyboardOptions, 
+    unknownCommand, languageChanged } = require('./constants');
+
+
 console.log('hi, i am the chatbot :)');
-
-//will be used to remember language settings
-const usersStates = {};
-const BG = 1;
-const EN = 0;
-
-const commandList = ['/lang bg' , '/lang en', '/start'];
 
 //console.log(process.argv);
 
@@ -37,50 +36,19 @@ catch(err){
 //creating the bot context
 const bot = new TelegramBot(botToken, {polling: true});
 
-
-const optionsInEnglish = { 
-    
-    'reply_markup': {
-
-        'keyboard': [
-            ['News'],
-            ['Events', 'Personal info'],
-            ['General information'],
-            ['Test my knowledge']
-        ]
-    }
-
-};
-
-const optionsInBulgarian = {
-
-    'reply_markup': {
-
-        'keyboard': [
-            ['Новини'],
-            ['Събития', 'Персонална инфо'],
-            ['Обща информация'],
-            ['Тествай познанията ми']
-        ]
-    }
-}
-
 //first message ever
 bot.onText(/\/start/, (msg) => {
     
     const answer = 'Welcome, ' + msg.chat.first_name + ' '
                              + msg.chat.last_name + '!';
 
-                           
     //saving user preferences
     if (usersStates[msg.chat.id] === undefined)
         usersStates[msg.chat.id] = EN;
 
-    console.log(usersStates); 
-
      //because sendMessage changes its param
      //deep copy objects
-    const opt = JSON.parse(JSON.stringify(optionsInEnglish));
+    const opt = JSON.parse(JSON.stringify(keyboardOptions[EN]));
     bot.sendMessage(msg.chat.id, answer, opt);
 
 });
@@ -89,18 +57,14 @@ bot.onText(/\/start/, (msg) => {
 //the result of executing exec on the regular expression
 bot.onText(/\/lang (en|bg)/, (msg, res) => {
     
-
+    //exec gives us an array with matched results
     let ln = (res[1] === 'bg') ? BG : EN;
 
     usersStates[msg.chat.id] = ln;
     
-    const answer = (ln === EN) ? "Now we are talking in english! 🇬🇧󠁧󠁢󠁥󠁮󠁧󠁿" :
-                                 "Вече си говорим на български! 🇧🇬";
+    const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
 
-    const opt = (ln === EN) ? JSON.parse(JSON.stringify(optionsInEnglish)):
-                            JSON.parse(JSON.stringify(optionsInBulgarian));
-
-    bot.sendMessage(msg.chat.id, answer, opt);
+    bot.sendMessage(msg.chat.id, languageChanged[ln], opt);
 
 });
 
@@ -110,14 +74,22 @@ bot.on('message',(msg) =>{
     if(commandList.find((el) => el === msg.text) !== undefined)
         return;
 
-    const optIndex = optionsInEnglish.reply_markup.keyboard.
+    //undefined -> EN
+    const ln = (usersStates[msg.chat.id] === BG) ? BG : EN;
+
+    const optIndex = keyboardOptions[ln].reply_markup.keyboard.
                                                     join(' ').
                                                     indexOf(msg.text);
     //no such option
-    if(optIndex === -1)
-        bot.sendMessage(msg.chat.id, 'I don\'t understand you 😓');
-    else
-        bot.sendMessage(msg.chat.id, msg.text + ' pressed!');
+    if(optIndex === -1){
+
+        bot.sendMessage(msg.chat.id, unknownCommand[ln]);
+        return;
+    }
+
+    
+    //proceed the command...
+    bot.sendMessage(msg.chat.id, msg.text + ' pressed!');
 
 });
 
