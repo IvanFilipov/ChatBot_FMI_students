@@ -4,7 +4,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const { BG, EN, commandList, 
     usersStates, keyboardOptions, 
     unknownCommand, languageChanged,
-    helpUrl } = require('./constants');
+    helpUrl, generalInfo,
+    choseOne } = require('./constants');
 
 
 console.log('hi, i am the chatbot :)');
@@ -72,15 +73,12 @@ bot.onText(/\/lang (en|bg)/, (msg, res) => {
 });
 
 //handling /help option
-bot.onText(/\/help*/, (msg) => {
+bot.onText(/\/help+/, (msg) => {
 
     //will match everything starting with help
     
     const ln = (usersStates[msg.chat.id] === BG) ? BG : EN;
     
-    //let opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
-
-
     bot.sendMessage(msg.chat.id, helpUrl[ln], {parse_mode : "Markdown"});
 
 });
@@ -88,7 +86,8 @@ bot.onText(/\/help*/, (msg) => {
 bot.on('message',(msg) =>{
 
     //it is a known command, it should be handled somewhere else
-    if(commandList.find((el) => el === msg.text) !== undefined)
+    if(commandList.find((el) => el === msg.text) !== undefined ||
+                                msg.text.indexOf('/help') !== -1)
         return;
 
     //undefined -> EN
@@ -105,6 +104,13 @@ bot.on('message',(msg) =>{
         return;
     }
 
+    if( msg.text === 'General information' ||
+        msg.text == 'Обща информация'){
+
+        bot.sendMessage(msg.chat.id, choseOne[ln], generalInfo[ln]);
+        return;
+
+    }
     
     //proceed the command...
     bot.sendMessage(msg.chat.id, msg.text + ' pressed!');
