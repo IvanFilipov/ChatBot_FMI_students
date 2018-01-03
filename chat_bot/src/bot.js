@@ -105,8 +105,7 @@ bot.on('message',(msg) =>{
     }
 
     if( msg.text === 'General information' ||
-        msg.text == 'Обща информация'){
-
+        msg.text === 'Обща информация'){
         bot.sendMessage(msg.chat.id, choseOne[ln], generalInfo[ln]);
         return;
 
