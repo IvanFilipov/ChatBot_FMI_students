@@ -5,7 +5,8 @@ const { BG, EN, commandList,
     usersStates, keyboardOptions, 
     unknownCommand, languageChanged,
     helpUrl, generalInfo,
-    choseOne } = require('./constants');
+    choseOne, testKeyboardOptions,
+    callBacks, questions } = require('./constants');
 
 
 console.log('hi, i am the chatbot :)');
@@ -85,13 +86,89 @@ bot.onText(/\/help+/, (msg) => {
 
 bot.on('message',(msg) =>{
 
+    //language of communication
+    //undefined -> EN
+    const ln = (usersStates[msg.chat.id] === BG) ? BG : EN;
+
+    //first of all checking for callback from "test me" option
+    let isCallback = callBacks[msg.chat.id];
+
+    //!== undefined
+    if(isCallback){
+
+       let userAnswer = 'ABCD'.indexOf(msg.text);
+       let [questionId, correctAnswer] = callBacks[msg.chat.id];
+
+       //remove from callback list
+       delete callBacks[msg.chat.id];
+
+       //see answer option
+        if (msg.text === 'See the answer' ||
+            msg.text === 'Виж отговора'){
+
+            let answerMsg = 'The correct answer is :\n ' +
+                            questions[questionId].answerOptions[correctAnswer];
+            
+            const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
+            bot.sendMessage(msg.chat.id, answerMsg, opt);
+            return;
+
+        }
+
+        //another question option
+        if (msg.text === 'Give me another question' ||
+            msg.text === 'Задай ми друг въпорс') {
+
+
+            questionRender = questions[0].text +
+                '\nA) ' + questions[0].answerOptions[0] +
+                '\nB) ' + questions[0].answerOptions[1] +
+                '\nC) ' + questions[0].answerOptions[2] +
+                '\nD) ' + questions[0].answerOptions[3] + '\n';
+
+            bot.sendMessage(msg.chat.id, questionRender, testKeyboardOptions[ln])
+                .then(() => callBacks[msg.chat.id] = [0, questions[0].correctAnswer]);
+
+            return;
+
+        }
+
+        //invalid answer
+        if (userAnswer === -1) {
+
+            //original keyboard
+            const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
+
+            bot.sendMessage(msg.chat.id, unknownCommand[ln], opt);
+
+            return;
+        }
+
+        //wrong answer
+        if (userAnswer !== -1 && userAnswer !== correctAnswer) {
+
+            let answerMsg = 'Wrong answer :(\n' + 'The correct answer is :\n ' +
+                questions[questionId].answerOptions[correctAnswer];
+
+            const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
+            bot.sendMessage(msg.chat.id, answerMsg, opt);
+            return;
+
+        }
+
+        //correct answer
+        let answerMsg = 'Correct answer :)\n';
+        const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
+        bot.sendMessage(msg.chat.id, answerMsg, opt);
+        return;
+    }
+
+
+
     //it is a known command, it should be handled somewhere else
     if(commandList.find((el) => el === msg.text) !== undefined ||
                                 msg.text.indexOf('/help') !== -1)
         return;
-
-    //undefined -> EN
-    const ln = (usersStates[msg.chat.id] === BG) ? BG : EN;
 
     //searching for the option
     const optIndex = keyboardOptions[ln].reply_markup.keyboard.
@@ -106,11 +183,28 @@ bot.on('message',(msg) =>{
 
     if( msg.text === 'General information' ||
         msg.text === 'Обща информация'){
+
         bot.sendMessage(msg.chat.id, choseOne[ln], generalInfo[ln]);
+        return;
+    }
+    
+    if (msg.text === 'Test my knowledge' ||
+        msg.text === 'Тествай познанията ми'){
+
+        let questionRender = questions[0].text + 
+                        '\nA) ' + questions[0].answerOptions[0] +
+                        '\nB) ' + questions[0].answerOptions[1] +
+                        '\nC) ' + questions[0].answerOptions[2] +
+                        '\nD) ' + questions[0].answerOptions[3] + '\n';
+
+        bot.sendMessage(msg.chat.id, questionRender, testKeyboardOptions[ln])
+            .then(() => callBacks[msg.chat.id] = [0, questions[0].correctAnswer]);
+
         return;
 
     }
-    
+
+
     //proceed the command...
     bot.sendMessage(msg.chat.id, msg.text + ' pressed!');
 

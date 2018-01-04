@@ -4,6 +4,24 @@ module.exports = {
     //will be used to remember language settings
     usersStates : {},
     
+    //will hold chatId -> correct answer
+    //map information for Test option 
+    callBacks : {},
+
+    //questions TODO : will not be a constant, will be taken from file
+    questions : [
+        {
+            text : 'Memory leak is :',
+            answerOptions : [
+                'someone, how forgets a lot',
+                'a dynamic allocated memory without a pointer to it',
+                'C/C++ lack of garbage collector',
+                'a null pointer'
+            ],
+            correctAnswer : 1
+        }
+    ],
+
     //language number constants
     BG : 1,
     EN : 0,
@@ -44,6 +62,38 @@ module.exports = {
         
     ],
 
+    //test keyboard options
+    testKeyboardOptions : [ 
+        
+        {  
+            'reply_markup': {
+        
+                'keyboard': [
+                    ['A', 'B', 'C', 'D'],
+                    ['See the answer'],
+                    ['Give me another question']
+                ]
+            }
+        
+        },
+
+        {
+
+        'reply_markup': {
+            
+                    'keyboard': [
+                        ['А', 'Б', 'В', 'Г'],
+                        ['Виж отговора'],
+                        ['Задай ми друг въпорс']
+                    ]
+                }
+        }
+        
+    ],
+
+    //creates inline keyboard
+    //to give options for 
+    //general information links
     generalInfo: [
 
         {
@@ -102,6 +152,7 @@ module.exports = {
         }
     ],
 
+    //messages for picking a choice 
     choseOne : [
 
         'Chose one from below :'
@@ -109,18 +160,22 @@ module.exports = {
         'Изберете едно :'
     ],
 
+    //messages for unknown commands
     unknownCommand : [
         'I don\'t understand you 😓'
         ,
         'Не те разбирам 😓'
     ],
 
+    //messages for successful language change
     languageChanged :[
         'Now we are talking in english! 🇬🇧󠁧󠁢󠁥󠁮󠁧󠁿'
         ,
         'Вече си говорим на български! 🇧🇬'
     ],
 
+    //links to instant view
+    //urls with how to use information
     helpUrl : [
         '[click here](http://telegra.ph/User-guide-how-to-use-the-chatbot-01-03)'
         //(https://github.com/IvanFilipov/ChatBot_FMI_students/blob/master/documentation/how_to_use/user_guide/en_guide.txt)'
@@ -128,5 +183,7 @@ module.exports = {
         '[кликнете тук](http://telegra.ph/Narchnik-za-izpolzvane-na-bota-01-03)'
         //(https://github.com/IvanFilipov/ChatBot_FMI_students/blob/master/documentation/how_to_use/user_guide/%D0%B1%D0%B3_%D0%BD%D0%B0%D1%80%D1%8A%D1%87%D0%BD%D0%B8%D0%BA.txt)'
     ]
+
+
 
 };
