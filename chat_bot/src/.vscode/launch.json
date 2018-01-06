@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}\\bot.js",
+            "program": "${workspaceFolder}\\index.js",
             "args": [
                 "538534505:AAHy5BujBqmST6aqyAM4aUOg_jgYiULcqqk"
             ]

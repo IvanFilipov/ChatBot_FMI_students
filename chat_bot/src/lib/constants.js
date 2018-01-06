@@ -1,17 +1,29 @@
 module.exports = {
 
     //questions TODO : will not be a constant, will be taken from file
-    questions : [
-        {
-            text : 'Memory leak is :',
-            answerOptions : [
-                'someone, who forgets a lot',
-                'a dynamic allocated memory without a pointer to it',
-                'C/C++ lack of garbage collector',
-                'a null pointer'
-            ],
-            correctAnswer : 1
-        }
+    questions: [
+        [
+            {
+                text: 'Memory leak is :',
+                answerOptions: [
+                    'someone, who forgets a lot',
+                    'a dynamic allocated memory without a pointer to it',
+                    'C/C++ lack of garbage collector',
+                    'a null pointer'
+                ],
+                correctAnswer: 1
+            },
+            {
+                text: 'Оттечка на памет наричаме',
+                answerOptions: [
+                    'някого, който много забравя',
+                    'динамично заделена памет, към която не сочи никой указател',
+                    'липсата на \'събирач на боклука\' в C/C++',
+                    'указател сочещ към NULL'
+                ],
+                correctAnswer: 1
+            }
+        ]
     ],
 
     //language number constants

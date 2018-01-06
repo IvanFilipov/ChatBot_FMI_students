@@ -56,8 +56,10 @@ module.exports = {
         if (msg.text === 'See the answer' ||
             msg.text === 'Виж отговора') {
 
-            let answerMsg = 'The correct answer is :\n ' +
-                questions[questionId].answerOptions[correctAnswer];
+            let answerMsg = ln ? 'Верният отговор е: \n'
+                               : 'The correct answer is :\n ';
+
+            answerMsg += questions[questionId][ln].answerOptions[correctAnswer];
 
             const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
             return bot.sendMessage(msg.chat.id, answerMsg, opt);
@@ -78,15 +80,17 @@ module.exports = {
         //wrong answer
         if (userAnswer !== -1 && userAnswer !== correctAnswer) {
 
-            let answerMsg = 'Wrong answer :(\n' + 'The correct answer is :\n ' +
-                questions[questionId].answerOptions[correctAnswer];
+            let answerMsg = ln ? 'Грешен отговор :(\nВерният отговор е :\n'
+                               :'Wrong answer :(\nThe correct answer is :\n ';
+
+            answerMsg += questions[questionId][ln].answerOptions[correctAnswer];
 
             const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
             return bot.sendMessage(msg.chat.id, answerMsg, opt);
         }
 
         //correct answer
-        let answerMsg = 'Correct answer :)\n';
+        let answerMsg = ln ? 'Верен отговор :)' : 'Correct answer :)\n';
         const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
         return bot.sendMessage(msg.chat.id, answerMsg, opt);
     },
@@ -94,9 +98,9 @@ module.exports = {
 
     testMe: function (bot, msg, ln, callBacks) {
 
-        let question = questions[0];
+        let question = questions[0][ln];
 
-        let answer = questionRender(question);
+        let answer = questionRender(question, ln);
 
         return bot.sendMessage(msg.chat.id, answer, testKeyboardOptions[ln])
             .then(() => callBacks[msg.chat.id] = [0, question.correctAnswer]);
@@ -106,13 +110,18 @@ module.exports = {
 
 //a helper function to represent a question
 //as a test
-const questionRender = function (question) {
+const questionRender = function (question, ln) {
 
+    let format = [
+
+        ['\nA) ', '\nB) ', '\nC) ', '\nD) '],
+        ['\nА) ', '\nБ) ', '\nВ) ', '\nГ) ']
+    ];
 
     return question.text +
-        '\nA) ' + question.answerOptions[0] +
-        '\nB) ' + question.answerOptions[1] +
-        '\nC) ' + question.answerOptions[2] +
-        '\nD) ' + question.answerOptions[3] + '\n';
+        format[ln][0] + question.answerOptions[0] +
+        format[ln][1] + question.answerOptions[1] +
+        format[ln][2] + question.answerOptions[2] +
+        format[ln][3] + question.answerOptions[3] + '\n';
 
 }
