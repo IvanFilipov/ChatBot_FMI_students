@@ -1,19 +1,11 @@
 module.exports = {
 
-
-    //will be used to remember language settings
-    usersStates : {},
-    
-    //will hold chatId -> correct answer
-    //map information for Test option 
-    callBacks : {},
-
     //questions TODO : will not be a constant, will be taken from file
     questions : [
         {
             text : 'Memory leak is :',
             answerOptions : [
-                'someone, how forgets a lot',
+                'someone, who forgets a lot',
                 'a dynamic allocated memory without a pointer to it',
                 'C/C++ lack of garbage collector',
                 'a null pointer'
@@ -28,6 +20,25 @@ module.exports = {
     
     //all supported commands
     commandList : ['/lang bg' , '/lang en', '/start', '/help'],
+
+    //all supported buttons / text messages
+    buttonLists : [
+
+        ['News','Events', 'Personal information','General information','Test my knowledge'],
+
+        [ 'Новини', 'Събития', 'Лична информация', 'Обща информация', 'Тествай познанията ми']
+    
+    ],
+
+    //constants for indexes of the buttons
+    enumOptions: {
+        NEWS_INDEX: 0,
+        EVENTS_INDEX: 1,
+        P_INFO_INDEX: 2,
+        G_INFO_INDEX: 3,
+        TEST_INDEX: 4,
+        INVALID : -1
+    },
 
 
     //keyboardOptions[0] - > object with options in EN
@@ -153,11 +164,11 @@ module.exports = {
     ],
 
     //messages for picking a choice 
-    choseOne : [
+    chose : [
 
-        'Chose one from below :'
+        'Chose from below :'
         ,
-        'Изберете едно :'
+        'Изберете от опциите :'
     ],
 
     //messages for unknown commands
@@ -183,7 +194,4 @@ module.exports = {
         '[кликнете тук](http://telegra.ph/Narchnik-za-izpolzvane-na-bota-01-03)'
         //(https://github.com/IvanFilipov/ChatBot_FMI_students/blob/master/documentation/how_to_use/user_guide/%D0%B1%D0%B3_%D0%BD%D0%B0%D1%80%D1%8A%D1%87%D0%BD%D0%B8%D0%BA.txt)'
     ]
-
-
-
 };
