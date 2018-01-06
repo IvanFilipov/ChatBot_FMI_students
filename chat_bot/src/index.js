@@ -1,6 +1,6 @@
-const TelegramBot = require('node-telegram-bot-api');
-
-const msgHandlers = require('./lib/msgHandlers');
+const TelegramBot = require('node-telegram-bot-api'),
+      msgHandlers = require('./lib/msgHandlers'),
+      config = require('./lib/configuration');
 
 const { 
     BG, EN, 
@@ -10,46 +10,25 @@ const {
 } = require('./lib/constants');
 
 
+//getting the token from the argv
+const botToken = config.get('token');
+
 console.log('hi, i am the chatbot :)');
-
-//console.log(process.argv);
-
-//the token passed as argument
-let botToken;
-
-function init(){
-
-    botToken = process.argv[2];
-
-    if(botToken === undefined)
-        throw Error('can\'t process');
-
-}
-
-try {
-
-    init();
-    console.log(botToken);
-}
-catch(err){
-
-    console.error(err);
-    process.exit(-1);
-}
+console.log(botToken);
 
 //creating the bot context
 const bot = new TelegramBot(botToken, {polling: true});
 
 
 //will be used to remember language settings
+//chatId -> BG | EN
 let usersLangs = {};
 
 //will hold chatId -> correct answer
 //map information for Test option 
 let callBacks = {};
 
-
-//first message ever
+//on first message ever
 bot.onText(/\/start/, (msg) => {
     
     //saving user preferences

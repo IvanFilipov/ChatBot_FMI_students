@@ -10,6 +10,7 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}\\index.js",
             "args": [
+                "--token",
                 "538534505:AAHy5BujBqmST6aqyAM4aUOg_jgYiULcqqk"
             ]
             

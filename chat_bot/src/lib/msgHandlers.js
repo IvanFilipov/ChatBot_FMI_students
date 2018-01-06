@@ -3,7 +3,7 @@ const {
     unknownCommand, languageChanged,
     helpUrl, generalInfo,
     chose, testKeyboardOptions,
-    questions } = require('./constants');
+    questionsList } = require('./constants');
 
 
 //each function will return a promise
@@ -34,7 +34,7 @@ module.exports = {
 
     unknown: function (bot, msg, ln) {
 
-        return bot.sendMessage(msg.chat.id, unknownCommand[ln]);
+        return bot.sendMessage(msg.chat.id, unknownCommand[ln], keyboardOptions[ln]);
     },
 
     gInfo: function (bot, msg, ln) {
@@ -59,7 +59,7 @@ module.exports = {
             let answerMsg = ln ? 'Верният отговор е: \n'
                                : 'The correct answer is :\n ';
 
-            answerMsg += questions[questionId][ln].answerOptions[correctAnswer];
+            answerMsg += questionsList[questionId][ln].answerOptions[correctAnswer];
 
             const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
             return bot.sendMessage(msg.chat.id, answerMsg, opt);
@@ -83,7 +83,7 @@ module.exports = {
             let answerMsg = ln ? 'Грешен отговор :(\nВерният отговор е :\n'
                                :'Wrong answer :(\nThe correct answer is :\n ';
 
-            answerMsg += questions[questionId][ln].answerOptions[correctAnswer];
+            answerMsg += questionsList[questionId][ln].answerOptions[correctAnswer];
 
             const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
             return bot.sendMessage(msg.chat.id, answerMsg, opt);
@@ -98,7 +98,7 @@ module.exports = {
 
     testMe: function (bot, msg, ln, callBacks) {
 
-        let question = questions[0][ln];
+        let question = questionsList[0][ln];
 
         let answer = questionRender(question, ln);
 

@@ -1,30 +1,15 @@
+const config = require('./configuration');
+
+//loading all URLs from the config file
+const externalLinks = config.get('externalLinks');
+
+//loading questions from file
+const questions = config.get('questions');
+
 module.exports = {
 
-    //questions TODO : will not be a constant, will be taken from file
-    questions: [
-        [
-            {
-                text: 'Memory leak is :',
-                answerOptions: [
-                    'someone, who forgets a lot',
-                    'a dynamic allocated memory without a pointer to it',
-                    'C/C++ lack of garbage collector',
-                    'a null pointer'
-                ],
-                correctAnswer: 1
-            },
-            {
-                text: 'Утечка на памет наричаме',
-                answerOptions: [
-                    'някого, който много забравя',
-                    'динамично заделена памет, към която не сочи никой указател',
-                    'липсата на \'събирач на боклука\' в C/C++',
-                    'указател сочещ към NULL'
-                ],
-                correctAnswer: 1
-            }
-        ]
-    ],
+    //taken externally from a file
+    questionsList : questions,
 
     //language number constants
     BG : 1,
@@ -126,21 +111,21 @@ module.exports = {
                     [
                         {
                             text: 'course info',
-                            url: 'https://docs.google.com/document/d/1UaaONmxmHAJXpL4RcGcgMSptBVLR4guacb45CdYN770'
+                            url: externalLinks.courseInfo
                         },
                         {
                             text: 'staff & contacts',
-                            url: 'https://docs.google.com/document/d/1UaaONmxmHAJXpL4RcGcgMSptBVLR4guacb45CdYN770'
+                            url: externalLinks.teamInfo
                         }
                     ],
                     [
                         {
                             text: 'books & links',
-                            url: 'https://docs.google.com/document/d/1Q9P_YwHMFULFn84VK-VLggO0JOmGs3Cn-B9klSmIrJs'
+                            url: externalLinks.booksInfo
                         },
                         {
                             text: 'syllabus',
-                            url: 'https://docs.google.com/document/d/1tKRmULwk2tb_iKXIGD3jDqSNRlFidCDBv8WipIGMzyo'
+                            url: externalLinks.themesInfo
                         }
                     ]
                 ]
@@ -198,12 +183,12 @@ module.exports = {
     ],
 
     //links to instant view
-    //urls with how to use information
+    //urls with who to use information
     helpUrl : [
-        '[click here](http://telegra.ph/User-guide-how-to-use-the-chatbot-01-03)'
+        '[click here]' + externalLinks.helpEN
         //(https://github.com/IvanFilipov/ChatBot_FMI_students/blob/master/documentation/how_to_use/user_guide/en_guide.txt)'
         ,
-        '[кликнете тук](http://telegra.ph/Narchnik-za-izpolzvane-na-bota-01-03)'
+        '[кликнете тук]' + externalLinks.helpBG
         //(https://github.com/IvanFilipov/ChatBot_FMI_students/blob/master/documentation/how_to_use/user_guide/%D0%B1%D0%B3_%D0%BD%D0%B0%D1%80%D1%8A%D1%87%D0%BD%D0%B8%D0%BA.txt)'
     ]
 };
