@@ -30,6 +30,7 @@ class Config {
 
 }
 
+//only one instance
 const config = new Config();
 
 module.exports = config;

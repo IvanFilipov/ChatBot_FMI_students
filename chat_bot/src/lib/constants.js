@@ -186,9 +186,7 @@ module.exports = {
     //urls with who to use information
     helpUrl : [
         '[click here]' + externalLinks.helpEN
-        //(https://github.com/IvanFilipov/ChatBot_FMI_students/blob/master/documentation/how_to_use/user_guide/en_guide.txt)'
         ,
         '[кликнете тук]' + externalLinks.helpBG
-        //(https://github.com/IvanFilipov/ChatBot_FMI_students/blob/master/documentation/how_to_use/user_guide/%D0%B1%D0%B3_%D0%BD%D0%B0%D1%80%D1%8A%D1%87%D0%BD%D0%B8%D0%BA.txt)'
     ]
 };

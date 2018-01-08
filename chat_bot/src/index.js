@@ -19,7 +19,6 @@ console.log(botToken);
 //creating the bot context
 const bot = new TelegramBot(botToken, {polling: true});
 
-
 //will be used to remember language settings
 //chatId -> BG | EN
 let usersLangs = {};
@@ -33,7 +32,7 @@ bot.onText(/\/start/, (msg) => {
     
     //saving user preferences
     if (usersLangs[msg.chat.id] === undefined)
-        usersLangs[msg.chat.id] = EN;
+        usersLangs[msg.chat.id] = BG; //default language is bulgarian
 
     msgHandlers.welcome(bot, msg);
 
@@ -59,7 +58,8 @@ bot.onText(/\/help+/, (msg) => {
 
     //will match everything starting with help
     
-    const ln = (usersLangs[msg.chat.id] === BG) ? BG : EN;
+    //if undefined => bulgarian
+    const ln = (usersLangs[msg.chat.id] === EN) ? EN : BG;
     
     msgHandlers.help(bot, msg, ln);
 
@@ -68,8 +68,8 @@ bot.onText(/\/help+/, (msg) => {
 bot.on('message', (msg) => {
 
     //language of communication
-    //undefined -> EN
-    const ln = (usersLangs[msg.chat.id] === BG) ? BG : EN;
+    //undefined -> BG
+    const ln = (usersLangs[msg.chat.id] === EN) ? EN : BG;
 
     //first of all checking for callback from "test me" option
     let isCallback = callBacks[msg.chat.id];

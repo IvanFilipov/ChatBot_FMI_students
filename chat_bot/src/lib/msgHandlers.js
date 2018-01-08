@@ -3,7 +3,8 @@ const {
     unknownCommand, languageChanged,
     helpUrl, generalInfo,
     chose, testKeyboardOptions,
-    questionsList } = require('./constants');
+    questionsList,
+    EN,BG } = require('./constants');
 
 
 //each function will return a promise
@@ -11,13 +12,28 @@ module.exports = {
 
     welcome: function (bot, msg) {
 
-        const answer = 'Welcome, ' + msg.chat.first_name + ' '
-            + msg.chat.last_name + '!';
+        const answerEN = 'Welcome, ' 
+            + msg.chat.first_name + ' '
+            + msg.chat.last_name + '!' 
+            + '\nI am the FMI\'s chat bot, click below to see how to communicate with me 😎';
+
+        const answerBG = 'Здравей, ' 
+            + msg.chat.first_name + ' '
+            + msg.chat.last_name + '!'
+            + '\nАз съм чатботът на ФМИ, кликни на линка отдолу за да '
+            + 'видиш как най - лесно да комуникираш с мен 😎';
+
 
         //because sendMessage changes its param
         //deep copy objects
-        const opt = JSON.parse(JSON.stringify(keyboardOptions[EN]));
-        return bot.sendMessage(msg.chat.id, answer, opt);
+        //const optEN = JSON.parse(JSON.stringify(keyboardOptions[EN]));
+        const optBG = JSON.parse(JSON.stringify(keyboardOptions[BG]));
+
+        return bot.sendMessage(msg.chat.id, answerEN)//, optEN)
+            .then(() => this.help(bot, msg, EN))
+            .then(() => bot.sendMessage(msg.chat.id, answerBG, optBG))
+            .then(() => this.help(bot, msg, BG));
+
     },
 
     langChanged: function (bot, msg, ln) {
@@ -80,8 +96,8 @@ module.exports = {
         //wrong answer
         if (userAnswer !== -1 && userAnswer !== correctAnswer) {
 
-            let answerMsg = ln ? 'Грешен отговор :(\nВерният отговор е :\n'
-                               :'Wrong answer :(\nThe correct answer is :\n ';
+            let answerMsg = ln ? 'Грешен отговор 😞\nВерният отговор е :\n'
+                               :'Wrong answer 😞\nThe correct answer is :\n ';
 
             answerMsg += questionsList[questionId][ln].answerOptions[correctAnswer];
 
@@ -90,7 +106,7 @@ module.exports = {
         }
 
         //correct answer
-        let answerMsg = ln ? 'Верен отговор :)' : 'Correct answer :)\n';
+        let answerMsg = ln ? 'Верен отговор 👍' : 'Correct answer 👍\n';
         const opt = JSON.parse(JSON.stringify(keyboardOptions[ln]));
         return bot.sendMessage(msg.chat.id, answerMsg, opt);
     },
