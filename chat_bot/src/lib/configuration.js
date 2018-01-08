@@ -15,11 +15,21 @@ class Config {
         //take all arguments from the command line
         nconf.argv();
 
-        //loading all questions
-        nconf.add('quest', { type: 'file', file: '../info_base/questions.json' });
-
-        //loading all config data
+           //loading all config data
         nconf.add('conf', { type: 'file', file: '../info_base/config.json' });
+
+        //will throw an error if any key is missing
+        nconf.required(['externalLinks', 'questionsPath', 'externalLinks:courseInfo',
+            'externalLinks:teamInfo', 'externalLinks:booksInfo', 'externalLinks:themesInfo',
+            'externalLinks:helpBG', 'externalLinks:helpEN']);
+
+
+
+        //loading all questions
+        nconf.add('quest', { type: 'file', file: nconf.get('questionsPath')});
+        //adding it to the required fields
+        nconf.required(['questions']);
+     
     }
 
     get(key) {
@@ -31,6 +41,17 @@ class Config {
 }
 
 //only one instance
-const config = new Config();
+let config;
+
+//if one of the keys is missing 
+//the program cannot start...
+try {
+    config = new Config();
+}
+catch (err) {
+
+    console.error('FATAL ERROR WHILE INITIALIZATION : ' + err.toString());
+    process.exit(-1);
+}
 
 module.exports = config;
