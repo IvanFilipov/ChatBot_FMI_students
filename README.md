@@ -6,7 +6,7 @@ written as a project assignment during the FMI's JavaScript Advanced 17/18 cours
 
 fast links :<br/>
   [idea](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/en_idea.txt)<br/>
-  how to use - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use<br/>
+  [how to use](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use)<br/>
 
 ## repository organization : 
 
@@ -28,8 +28,8 @@ fast links :<br/>
 проектно задание като част от курса "JavaScript за напреднали" 17/18 воден във ФМИ
 
 бързи връзи :<br/>
-  идеята - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/бг_идея.txt<br/>
-  как да използваме - https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use
+  [идеята](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/бг_идея.txt)<br/>
+  [как да използваме](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use)
 
 ## организация на хранилището : 
 
