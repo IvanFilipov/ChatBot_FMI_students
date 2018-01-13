@@ -114,19 +114,21 @@ module.exports = {
 
     testMe: function (bot, msg, ln, callBacks) {
 
-        let question = questionsList[0][ln];
+        let qIndex = getRandomInt(questionsList.length);
+
+        let question = questionsList[qIndex][ln];
 
         let answer = questionRender(question, ln);
 
         return bot.sendMessage(msg.chat.id, answer, testKeyboardOptions[ln])
-            .then(() => callBacks[msg.chat.id] = [0, question.correctAnswer]);
+            .then(() => callBacks[msg.chat.id] = [qIndex, question.correctAnswer]);
     }
 
 };
 
 //a helper function to represent a question
 //as a test
-const questionRender = function (question, ln) {
+const questionRender = (question, ln) => {
 
     let format = [
 
@@ -139,5 +141,13 @@ const questionRender = function (question, ln) {
         format[ln][1] + question.answerOptions[1] +
         format[ln][2] + question.answerOptions[2] +
         format[ln][3] + question.answerOptions[3] + '\n';
+
+}
+
+//a helper function to get a random index for
+//a question from the test
+const getRandomInt = (max) => {
+
+    return Math.floor(Math.random() * Math.floor(max));
 
 }

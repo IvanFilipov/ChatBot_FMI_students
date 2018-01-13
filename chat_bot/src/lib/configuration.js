@@ -15,6 +15,8 @@ class Config {
         //take all arguments from the command line
         nconf.argv();
 
+        nconf.required(['token']);
+
            //loading all config data
         nconf.add('conf', { type: 'file', file: '../info_base/config.json' });
 
