@@ -1,6 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api'),
       msgHandlers = require('./lib/msgHandlers'),
-      config = require('./lib/configuration');
+      config = require('./lib/configuration'),
+      logger = require('./lib/logger');
 
 const { 
     BG, EN, 
@@ -13,8 +14,8 @@ const {
 //getting the token from the argv
 const botToken = config.get('token');
 
-console.log('hi, i am the chatbot :)');
-console.log(botToken);
+logger.info('hi, i am the chatbot :)');
+logger.info(botToken);
 
 //creating the bot context
 const bot = new TelegramBot(botToken, {polling: true});
@@ -27,6 +28,18 @@ let usersLangs = {};
 //map information for Test option 
 let callBacks = {};
 
+
+//polling error handler
+let OK = true;
+bot.on('polling_error', (err) => {
+   
+    if(OK){
+
+        logger.error(err.code);
+        OK = false;
+    }
+});
+
 //on first message ever
 bot.onText(/\/start/, (msg) => {
     
@@ -34,7 +47,9 @@ bot.onText(/\/start/, (msg) => {
     if (usersLangs[msg.chat.id] === undefined)
         usersLangs[msg.chat.id] = BG; //default language is bulgarian
 
-    msgHandlers.welcome(bot, msg);
+    msgHandlers.welcome(bot, msg)
+                .then(() => logger.info('WELCOME ' + msg.chat.id + ' OK'))
+                .catch(err => logger.error(err.toString()));
 
 });
 
@@ -49,7 +64,9 @@ bot.onText(/\/lang (en|bg)/, (msg, res) => {
     //saving the choice
     usersLangs[msg.chat.id] = ln;
 
-    msgHandlers.langChanged(bot, msg, ln);
+    msgHandlers.langChanged(bot, msg, ln)
+        .then(() => logger.info('CHANGE LN ' + msg.chat.id + ' OK'))
+        .catch(err => logger.error(err.toString()));
 
 });
 
@@ -60,12 +77,16 @@ bot.onText(/\/help+/, (msg) => {
     
     //if undefined => bulgarian
     const ln = (usersLangs[msg.chat.id] === EN) ? EN : BG;
-    
-    msgHandlers.help(bot, msg, ln);
+
+    msgHandlers.help(bot, msg, ln)
+        .then(() => logger.info('HELP ' + msg.chat.id + ' OK'))
+        .catch(err => logger.error(err.toString()));
 
 });
 
 bot.on('message', (msg) => {
+
+    OK = true; //back online
 
     //language of communication
     //undefined -> BG
@@ -77,7 +98,10 @@ bot.on('message', (msg) => {
     //!== undefined
     if(isCallback){
 
-       msgHandlers.testCallback(bot, msg, ln, callBacks);
+        msgHandlers.testCallback(bot, msg, ln, callBacks)
+            .then(() => logger.info('TEST CALLBACK ' + msg.chat.id + ' OK'))
+            .catch(err => logger.error(err.toString()));;
+
        return;
 
     }
@@ -95,17 +119,26 @@ bot.on('message', (msg) => {
 
         case enumOptions.G_INFO_INDEX:
 
-            msgHandlers.gInfo(bot, msg, ln);
+            msgHandlers.gInfo(bot, msg, ln)
+                .then(() => logger.info('GENERAL INFO ' + msg.chat.id + ' OK'))
+                .catch(err => logger.error(err.toString()));
+
             return;
 
         case enumOptions.TEST_INDEX:
 
-            msgHandlers.testMe(bot, msg, ln, callBacks);
+            msgHandlers.testMe(bot, msg, ln, callBacks)
+                .then(() => logger.info('TEST ' + msg.chat.id + ' OK'))
+                .catch(err => logger.error(err.toString()));
+
             return;
 
         case enumOptions.INVALID:
 
-            msgHandlers.unknown(bot, msg, ln);
+            msgHandlers.unknown(bot, msg, ln)
+                .then(msg => logger.info('UNKNOWN ' + msg.chat.id + ' OK'))
+                .catch(err => logger.error(err.toString()));
+
             return;
 
         default:

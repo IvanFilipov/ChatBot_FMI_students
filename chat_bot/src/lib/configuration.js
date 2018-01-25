@@ -48,9 +48,10 @@ let config;
 //if one of the keys is missing 
 //the program cannot start...
 try {
+
     config = new Config();
-}
-catch (err) {
+
+} catch (err) {
 
     console.error('FATAL ERROR WHILE INITIALIZATION : ' + err.toString());
     process.exit(-1);
