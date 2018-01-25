@@ -7,6 +7,8 @@ const {
     EN,BG } = require('./constants');
 
 
+const forumReq = require('./moodleAPI');
+
 //each function will return a promise
 module.exports = {
 
@@ -122,9 +124,38 @@ module.exports = {
 
         return bot.sendMessage(msg.chat.id, answer, testKeyboardOptions[ln])
             .then(() => callBacks[msg.chat.id] = [qIndex, question.correctAnswer]);
+    },
+
+
+    getNews : function (bot, msg, ln){
+
+        //let tittles;
+
+        return forumReq.request()
+            .then((response) => discussions = response.data.discussions)
+            .then((discussions) => getTittles(discussions))
+            .then((res) => bot.sendMessage(msg.chat.id, res));
+
+
+
     }
 
 };
+
+
+//a helper function to get tittles of news in forum
+const getTittles = (discussions) => {
+
+    let res = "";
+
+    discussions.forEach(el => {
+        res += el.name + '\n';
+    });
+
+    return res;
+}
+
+
 
 //a helper function to represent a question
 //as a test

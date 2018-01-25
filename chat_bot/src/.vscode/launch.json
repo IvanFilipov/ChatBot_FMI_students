@@ -9,10 +9,12 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}\\index.js",
-            //"program" : "${file}",
+           // "program" : "${file}",
             "args": [
-                "--token",
-                "538534505:AAHy5BujBqmST6aqyAM4aUOg_jgYiULcqqk"
+                "--bToken",
+                "538534505:AAHy5BujBqmST6aqyAM4aUOg_jgYiULcqqk",
+                "--mToken",
+                "7a13d288cfa2003375a07f896ca18ea8"
             ]
             
         }

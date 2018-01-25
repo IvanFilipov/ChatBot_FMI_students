@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/IvanFilipov/ChatBot_FMI_students#readme",
   "dependencies": {
+    "axios": "^0.17.1",
     "nconf": "^0.10.0",
     "node-telegram-bot-api": "^0.30.0",
     "winston": "^2.4.0"

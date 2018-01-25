@@ -2,3 +2,4 @@ node_modules/
 info_base/
 .vscode/
 log/
+chat_bot/log/info.log

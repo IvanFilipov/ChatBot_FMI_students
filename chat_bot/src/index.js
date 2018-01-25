@@ -12,10 +12,11 @@ const {
 
 
 //getting the token from the argv
-const botToken = config.get('token');
+const botToken = config.get('bToken');
 
-logger.info('hi, i am the chatbot :)');
-logger.info(botToken);
+//logger.debug('console');
+logger.info('STARTED');
+logger.debug(botToken);
 
 //creating the bot context
 const bot = new TelegramBot(botToken, {polling: true});
@@ -137,6 +138,14 @@ bot.on('message', (msg) => {
 
             msgHandlers.unknown(bot, msg, ln)
                 .then(msg => logger.info('UNKNOWN ' + msg.chat.id + ' OK'))
+                .catch(err => logger.error(err.toString()));
+
+            return;
+
+        case enumOptions.NEWS_INDEX :
+
+            msgHandlers.getNews(bot, msg, ln)
+                .then(msg => logger.info('GET NEWS ' + msg.chat.id + ' OK'))
                 .catch(err => logger.error(err.toString()));
 
             return;
