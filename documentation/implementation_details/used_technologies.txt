@@ -1,4 +1,6 @@
-nodeJS /javaScript - EcmaScript / telegram bot api / ....and a lot of more stuff, which will be added
-while writting the code 
+nodeJS /javaScript - EcmaScript  
 
-libs : https://github.com/yagop/node-telegram-bot-api
+libs : https://github.com/yagop/node-telegram-bot-api / for talking with telegram api
+       https://github.com/axios/axios / for asynchronous http request
+       https://github.com/indexzero/nconf / for configurations
+       https://github.com/winstonjs/winston / for logging
