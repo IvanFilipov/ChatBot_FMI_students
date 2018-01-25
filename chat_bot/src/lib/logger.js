@@ -22,6 +22,11 @@ const formatFunc = (options) => {
 const logger = new (winston.Logger)({
     transports: [
 
+        new (winston.transports.Console)({
+                level: 'debug',
+                json: false,
+                formatter: formatFunc
+        }),
         //info logger config
         new (winston.transports.File)({
             name: 'info-file',
@@ -43,4 +48,5 @@ const logger = new (winston.Logger)({
     ]
 });
 
+//logger.add(winston.transports.Console);
 module.exports = logger;

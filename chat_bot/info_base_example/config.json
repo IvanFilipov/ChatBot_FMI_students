@@ -1,4 +1,5 @@
 {
+    "questionsPath" : "../info_base/questions.json",
     "externalLinks" : {
 
         
@@ -12,6 +13,12 @@
         "helpEN" : "(http://telegra.ph/User-guide-how-to-use-the-chatbot-01-03)"
 
 
+    },
+    "moodleConfig": {
+        "baseUrl": "http://dev.learn.fmi.uni-sofia.bg/",
+        "serviceUrl": "/webservice/rest/server.php?",
+        "fun_forumDiscussions": "mod_forum_get_forum_discussions_paginated",
+        "forumid": 2293
     }
     
 }
