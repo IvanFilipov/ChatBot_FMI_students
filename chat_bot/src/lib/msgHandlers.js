@@ -146,12 +146,13 @@ module.exports = {
         if(disc === undefined)
             return bot.sendMessage(msg.chat.id, 'Currently unavailable');
         
+        //basic HTML supported ...
         let answer = replaceAll(disc.message,'<p.*?>','\n');
         answer = replaceAll(answer,'</p>','');
         answer = replaceAll(answer, '<br.*?/>', '\n');
 
         return bot.sendMessage(msg.chat.id, answer, { parse_mode: "HTML" })
-               .catch(() => bot.sendMessage(msg.chat.id, disc.message)); // send raw .. :()
+               .catch(() => bot.sendMessage(msg.chat.id, disc.message)); // send raw .. :(
             
     }
 };
