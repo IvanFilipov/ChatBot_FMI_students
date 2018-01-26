@@ -130,29 +130,68 @@ module.exports = {
     getNews : function (bot, msg, ln){
 
         //let tittles;
+        console.log(discussions);
 
-        return forumReq.request()
-            .then((response) => discussions = response.data.discussions)
-            .then((discussions) => getTittles(discussions))
-            .then((res) => bot.sendMessage(msg.chat.id, res));
+        return fetchDiscussions()
+            .catch(err => {bot.sendMessage(msg.chat.id, 'internal error');throw err;})
+            .then(() => getTittles(discussions))
+            .then((res) => bot.sendMessage(msg.chat.id,'answer :', res))
 
+    },
 
+    getNewsContain : function (bot, msg, action){
 
+        let disc = discussions.find(el => el.id === action);
+
+        if(disc === undefined)
+            return bot.sendMessage(msg.chat.id, 'Currently unavailable');
+        
+        let answer = replaceAll(disc.message,'<p.*?>','\n');
+        answer = replaceAll(answer,'</p>','');
+        answer = replaceAll(answer, '<br.*?/>', '\n');
+
+        return bot.sendMessage(msg.chat.id, answer, { parse_mode: "HTML" })
+               .catch(() => bot.sendMessage(msg.chat.id, disc.message)); // send raw .. :()
+            
     }
-
 };
 
+//used to replace <p> in order to make a valid html for parse
+replaceAll = (str, find, replace) => {
+    return str.replace(new RegExp(find, 'g'), replace);
+}
+
+//will hold all forum's discussions
+let discussions = [];
+
+const fetchDiscussions = () => {
+
+    return forumReq.request()
+        .then((response) => discussions = response.data.discussions);
+
+
+}
 
 //a helper function to get tittles of news in forum
+//and create an inline keyboard from them
 const getTittles = (discussions) => {
 
-    let res = "";
+    const opts = {
+        reply_markup: {
+          inline_keyboard: [
+          ]
+        }
+      };
+
 
     discussions.forEach(el => {
-        res += el.name + '\n';
+       opts.reply_markup.inline_keyboard.push([{
+           text : el.name,
+           callback_data : el.id
+       }]);
     });
 
-    return res;
+    return opts;
 }
 
 

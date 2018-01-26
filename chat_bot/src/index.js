@@ -29,7 +29,6 @@ let usersLangs = {};
 //map information for Test option 
 let callBacks = {};
 
-
 //polling error handler
 let OK = true;
 bot.on('polling_error', (err) => {
@@ -87,6 +86,7 @@ bot.onText(/\/help+/, (msg) => {
 
 bot.on('message', (msg) => {
 
+    
     OK = true; //back online
 
     //language of communication
@@ -159,3 +159,15 @@ bot.on('message', (msg) => {
 });
 
 
+// Handle callback queries from inline keyboard
+bot.on('callback_query', callbackQuery => {
+
+
+    const wantedId = parseInt(callbackQuery.data);
+    const msg = callbackQuery.message;
+    
+    msgHandlers.getNewsContain(bot, msg, wantedId)
+        .then(msg => logger.info('GET NEWS CONTAIN ' + msg.chat.id + ' OK'))
+        .catch(err => logger.error(err.toString()));
+    
+});
