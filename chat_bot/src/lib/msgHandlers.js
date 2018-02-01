@@ -7,7 +7,7 @@ const {
     EN,BG } = require('./constants');
 
 
-const forumReq = require('./moodleAPI');
+const { forumReq, assignReq } = require('./moodleAPI');
 
 //each function will return a promise
 module.exports = {
@@ -55,7 +55,7 @@ module.exports = {
         return bot.sendMessage(msg.chat.id, unknownCommand[ln], keyboardOptions[ln]);
     },
 
-    gInfo: function (bot, msg, ln) {
+    getGeneralInfo: function (bot, msg, ln) {
 
         return bot.sendMessage(msg.chat.id, chose[ln], generalInfo[ln]);
     },
@@ -133,7 +133,11 @@ module.exports = {
         console.log(discussions);
 
         return fetchDiscussions()
-            .catch(err => {bot.sendMessage(msg.chat.id, 'internal error');throw err;})
+            .catch(err => {
+
+                bot.sendMessage(msg.chat.id, 'internal error');
+                throw err;
+            })
             .then(() => getTittles(discussions))
             .then((res) => bot.sendMessage(msg.chat.id,'answer :', res))
 
@@ -154,23 +158,72 @@ module.exports = {
         return bot.sendMessage(msg.chat.id, answer, { parse_mode: "HTML" })
                .catch(() => bot.sendMessage(msg.chat.id, disc.message)); // send raw .. :(
             
+    },
+
+    getAssignments : function (bot, msg, ln){
+
+         //let tittles;
+         console.log(assignments);
+
+         return fetchAssignments()
+             .catch(err => {
+ 
+                 bot.sendMessage(msg.chat.id, 'internal error');
+                 throw err;
+             })
+             .then(() => getAssignmentsInfo(assignments))
+             .then((res) => bot.sendMessage(msg.chat.id, res))
+
     }
+
 };
 
-//used to replace <p> in order to make a valid html for parse
+
+//used to replace <p> in order to make a valid html for parse mode
 replaceAll = (str, find, replace) => {
     return str.replace(new RegExp(find, 'g'), replace);
 }
 
 //will hold all forum's discussions
 let discussions = [];
+//will hold all forum's assignments
+let assignments = [];
 
+
+const fetchAssignments = () => {
+
+    return assignReq.request()
+        .then(response => assignments = response.data.courses[0].assignments);
+
+}
+
+//makes a request to moodule in order to get 
+//all news from the forum
 const fetchDiscussions = () => {
 
     return forumReq.request()
-        .then((response) => discussions = response.data.discussions);
+        .then(response => discussions = response.data.discussions);
+
+}
 
 
+const getAssignmentsInfo = (assignments) => {
+
+    let res = 'Предстоящите ви задания са : \n\n';
+
+    //TO DO filter
+    assignments.forEach(assign => res += getImportantInfo(assign));
+    
+    return res;
+}
+
+const getImportantInfo = (assignment) => {
+
+    return assignment.name + '\n'
+        + 'от : \n'
+        + 'до : \n'
+        + 'къде : в мудъл \n'
+        + '\n\n';
 }
 
 //a helper function to get tittles of news in forum

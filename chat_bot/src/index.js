@@ -120,7 +120,7 @@ bot.on('message', (msg) => {
 
         case enumOptions.G_INFO_INDEX:
 
-            msgHandlers.gInfo(bot, msg, ln)
+            msgHandlers.getGeneralInfo(bot, msg, ln)
                 .then(() => logger.info('GENERAL INFO ' + msg.chat.id + ' OK'))
                 .catch(err => logger.error(err.toString()));
 
@@ -142,12 +142,19 @@ bot.on('message', (msg) => {
 
             return;
 
-        case enumOptions.NEWS_INDEX :
+        case enumOptions.NEWS_INDEX:
 
             msgHandlers.getNews(bot, msg, ln)
                 .then(msg => logger.info('GET NEWS ' + msg.chat.id + ' OK'))
                 .catch(err => logger.error(err.toString()));
 
+            return;
+
+        case enumOptions.ASSIGN_INDEX:
+
+            msgHandlers.getAssignments(bot, msg, ln)
+                .then(msg => logger.info('ASSIGNMENTS ' + msg.chat.id + ' OK'))
+                .catch(err => logger.error(err.toString()));
             return;
 
         default:

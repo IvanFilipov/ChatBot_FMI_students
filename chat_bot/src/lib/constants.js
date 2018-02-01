@@ -21,16 +21,16 @@ module.exports = {
     //all supported buttons / text messages
     buttonLists : [
 
-        ['News','Events', 'Personal information','General information','Test my knowledge'],
+        ['News','Assignments', 'Personal information','General information','Test my knowledge'],
 
-        [ 'Новини', 'Събития', 'Лична информация', 'Обща информация', 'Тествай познанията ми']
+        [ 'Новини', 'Задания', 'Лична информация', 'Обща информация', 'Тествай познанията ми']
     
     ],
 
     //constants for indexes of the buttons
     enumOptions: {
         NEWS_INDEX: 0,
-        EVENTS_INDEX: 1,
+        ASSIGN_INDEX: 1,
         P_INFO_INDEX: 2,
         G_INFO_INDEX: 3,
         TEST_INDEX: 4,
@@ -47,7 +47,7 @@ module.exports = {
         
                 'keyboard': [
                     ['News'],
-                    ['Events', 'Personal information'],
+                    ['Assignments', 'Personal information'],
                     ['General information'],
                     ['Test my knowledge']
                 ]
@@ -61,7 +61,7 @@ module.exports = {
             
                     'keyboard': [
                         ['Новини'],
-                        ['Събития', 'Лична информация'],
+                        ['Задания', 'Лична информация'],
                         ['Обща информация'],
                         ['Тествай познанията ми']
                     ]

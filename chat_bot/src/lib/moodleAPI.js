@@ -11,7 +11,7 @@ const forumReq = axios.create({
     url : moodleConfig.serviceUrl ,
     baseURL: moodleConfig.baseUrl,
     method : 'get',
-    timeout: 5000,
+    timeout: 2000,
 
     params: {
         wstoken: moodleToken,
@@ -22,5 +22,23 @@ const forumReq = axios.create({
     
 });
 
-module.exports = forumReq;
+const assignReq = axios.create({
+
+    url : moodleConfig.serviceUrl ,
+    baseURL: moodleConfig.baseUrl,
+    method : 'get',
+    timeout: 10000,
+
+    params: {
+        wstoken: moodleToken,
+        wsfunction : moodleConfig.fun_assignments,
+        courseids : [moodleConfig.courseid],
+        moodlewsrestformat : 'json'
+    },
+    
+});
+
+
+
+module.exports = {forumReq , assignReq };
      
