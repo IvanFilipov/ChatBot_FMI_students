@@ -1,6 +1,7 @@
 # ChatBot_FMI_students
 
-a telegram based chat-bot application for better student awareness
+a telegram based chat-bot application for better education and student awareness<br/>
+integrated with moodle e-learning system
 
 written as a project assignment during the FMI's JavaScript Advanced 17/18 course
 
@@ -22,8 +23,9 @@ fast links :<br/>
 
 # Чатбот за студентите от ФМИ
 
-приложение, базирано на телеграмски чат бот, за по - добра информираност на студентите от ФМИ,
-по - специално тези, които взимат участие в курсовете по УП, ООП и СДП
+приложение, базирано на телеграмски чат бот, за по - добра информираност и обучение на студентите от ФМИ,<br/>
+по - специално тези, които взимат участие в курсовете по УП, ООП и СДП<br/>
+интегриран със moodle системата за електроно обучение
 
 проектно задание като част от курса "JavaScript за напреднали" 17/18 воден във ФМИ
 
