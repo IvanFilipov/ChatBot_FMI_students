@@ -183,7 +183,7 @@ module.exports = {
     ],
 
     //links to instant view
-    //urls with who to use information
+    //urls with how to use information
     helpUrl : [
         '[click here]' + externalLinks.helpEN
         ,

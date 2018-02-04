@@ -7,7 +7,8 @@ const {
     EN,BG } = require('./constants');
 
 
-const { forumReq, assignReq } = require('./moodleAPI');
+const { forumReq, assignReq,
+        userReq, gradesReq } = require('./moodleAPI');
 
 //each function will return a promise
 module.exports = {
@@ -130,7 +131,7 @@ module.exports = {
     getNews : function (bot, msg, ln){
 
         //let tittles;
-        console.log(discussions);
+        //console.log(discussions);
 
         return fetchDiscussions()
             .catch(err => {
@@ -162,8 +163,7 @@ module.exports = {
 
     getAssignments : function (bot, msg, ln){
 
-         //let tittles;
-         console.log(assignments);
+         //console.log(assignments);
 
          return fetchAssignments()
              .catch(err => {
@@ -174,12 +174,50 @@ module.exports = {
              .then(() => getAssignmentsInfo(assignments))
              .then((res) => bot.sendMessage(msg.chat.id, res))
 
+    },
+
+    personalInfo: function (bot, msg, ln){
+
+        let facultyId = msg.text;
+
+        return userReq.request()
+            .catch(err => {
+                bot.sendMessage(msg.chat.id, 'internal error', keyboardOptions[ln]);
+                throw err;
+            })
+            .then(response => userInfo(response.data, facultyId, msg.from.id.toString()))
+            .catch(err => {
+                bot.sendMessage(msg.chat.id, err, keyboardOptions[ln]);
+                throw err;
+            })
+            .then(userid => {
+                //setting the current request parameter
+                gradesReq.defaults.params['userid'] = userid;
+
+                return gradesReq.request()
+                    .catch(err => {
+                        bot.sendMessage(msg.chat.id, 'internal error', keyboardOptions[ln]);
+                        throw err;
+                    })
+                    .then(response => getGrades(response.data))
+                    .then(res => bot.sendMessage(msg.chat.id, res, keyboardOptions[ln]))
+
+            });
+
+
+    },
+
+    invalidFacultyNumber : function(bot, msg, ln){
+
+        return bot.sendMessage(msg.chat.id, 'Invalid faculty number', keyboardOptions[ln]);
+
     }
 
 };
 
 
-//used to replace <p> in order to make a valid html for parse mode
+//used to replace <p> and other tags
+//in order to make a valid html for parse mode
 replaceAll = (str, find, replace) => {
     return str.replace(new RegExp(find, 'g'), replace);
 }
@@ -212,12 +250,12 @@ const getAssignmentsInfo = (assignments) => {
     let res = 'Предстоящите ви задания са : \n\n';
 
     //TO DO filter
-    assignments.forEach(assign => res += getImportantInfo(assign));
+    assignments.forEach(assign => res += formatAssigment(assign));
     
     return res;
 }
 
-const getImportantInfo = (assignment) => {
+const formatAssigment = (assignment) => {
 
     return assignment.name + '\n'
         + 'от : \n'
@@ -248,6 +286,51 @@ const getTittles = (discussions) => {
     return opts;
 }
 
+//a helper function to get personal data of a user
+const userInfo = (users, facultyId, fromId) =>{
+
+    let user = users.find(el => el.idnumber === facultyId);
+
+    //this faculty number is not enrolled in the course
+    if(user === undefined)
+        throw "Access denied : Not enrolled!";
+
+    // let telegramId = 
+    if(user.customfields === undefined)
+        throw "Access denied : Moodle profile is not configured!";
+
+    let telegramId = user.customfields.find(el => el.shortname === "telegramid").value;
+
+    if(telegramId === undefined || telegramId !== fromId)
+        throw "Access denied : Moodle profile is not configured!";
+
+    return user.id;
+}
+
+//a helper to get all grades for a user
+const getGrades = (user) => {
+
+
+    let arrGrades = user.usergrades[0].gradeitems;
+
+    return formatGradesAnswer(arrGrades);
+
+}
+
+const formatGradesAnswer = (arrGrades) => {
+
+    let res = "";
+
+    arrGrades.forEach(el => {
+
+        res += el.itemname + '\n'
+            + el.gradeformatted + ' / ' 
+            + el.grademax + '\n\n';
+
+    })
+
+    return res;
+}
 
 
 //a helper function to represent a question

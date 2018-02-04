@@ -38,7 +38,38 @@ const assignReq = axios.create({
     
 });
 
+const userReq = axios.create({
 
+    url : moodleConfig.serviceUrl ,
+    baseURL: moodleConfig.baseUrl,
+    method : 'get',
+    timeout: 10000,
 
-module.exports = {forumReq , assignReq };
+    params: {
+        wstoken: moodleToken,
+        wsfunction : moodleConfig.fun_user,
+        courseid : moodleConfig.courseid,
+        moodlewsrestformat : 'json'
+    },
+    
+});
+
+const gradesReq = axios.create({
+
+    url : moodleConfig.serviceUrl ,
+    baseURL: moodleConfig.baseUrl,
+    method : 'get',
+    timeout: 10000,
+
+    params: {
+        wstoken: moodleToken,
+        wsfunction : moodleConfig.fun_grades,
+        courseid : moodleConfig.courseid,
+        userid : 0,
+        moodlewsrestformat : 'json'
+    },
+    
+});
+
+module.exports = { forumReq , assignReq, userReq, gradesReq };
      

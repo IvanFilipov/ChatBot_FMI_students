@@ -84,6 +84,32 @@ bot.onText(/\/help+/, (msg) => {
 
 });
 
+//handling personal information by faculty number
+bot.onText(/\d+/, (msg, res) => {
+
+    const ln = (usersLangs[msg.chat.id] === EN) ? EN : BG;
+
+    //informatics ids are at least 5 digits,
+    //not handled by the regexp on purpose 
+    if(res.input.length < 5){
+
+        msgHandlers.invalidFacultyNumber(bot, msg, ln)
+            .then(() => logger.info('PERSONAL INFO ' + msg.chat.id + ' INVALID ID'))
+            .catch(err => logger.error(err.toString()));
+
+        return;
+
+    }
+
+    msgHandlers.personalInfo(bot, msg, ln)
+        .then(() => logger.info('PERSONAL INFO ' + msg.chat.id + ' OK'))
+        .catch(err => logger.error(err.toString()));
+
+})
+
+
+
+
 bot.on('message', (msg) => {
 
     
@@ -109,7 +135,7 @@ bot.on('message', (msg) => {
 
     //it is a known command, it should be handled somewhere else
     if(commandList.find((el) => el === msg.text) !== undefined ||
-                                msg.text.indexOf('/help') !== -1)
+        msg.text.indexOf('/help') !== -1 || !isNaN(msg.text))
         return;
 
     //searching for the option in the current language
@@ -157,8 +183,18 @@ bot.on('message', (msg) => {
                 .catch(err => logger.error(err.toString()));
             return;
 
+        case enumOptions.P_INFO_INDEX:
+
+            bot.sendMessage(msg.chat.id, 'please enter your faculty number', {
+                reply_markup: JSON.stringify({
+                    hide_keyboard: true
+                })
+            });
+            return;
+            
+
         default:
-            //proceed the command...
+            //debug reason only...
             bot.sendMessage(msg.chat.id, msg.text + ' pressed!');
 
     }
