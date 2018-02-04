@@ -3,7 +3,10 @@ const {
     unknownCommand, languageChanged,
     helpUrl, generalInfo,
     chose, testKeyboardOptions,
-    questionsList,
+    questionsList, invalidFn,
+    internalError, news,
+    accessDeniedEnrol, accessDeniedOtherFn,
+    accessDeniedMoodleConfig,
     EN,BG } = require('./constants');
 
 
@@ -130,17 +133,14 @@ module.exports = {
 
     getNews : function (bot, msg, ln){
 
-        //let tittles;
-        //console.log(discussions);
-
         return fetchDiscussions()
             .catch(err => {
 
-                bot.sendMessage(msg.chat.id, 'internal error');
+                bot.sendMessage(msg.chat.id, internalError[ln]);
                 throw err;
             })
             .then(() => getTittles(discussions))
-            .then((res) => bot.sendMessage(msg.chat.id,'answer :', res))
+            .then((res) => bot.sendMessage(msg.chat.id, news[ln], res))
 
     },
 
@@ -168,10 +168,10 @@ module.exports = {
          return fetchAssignments()
              .catch(err => {
  
-                 bot.sendMessage(msg.chat.id, 'internal error');
+                 bot.sendMessage(msg.chat.id, internalError[ln]);
                  throw err;
              })
-             .then(() => getAssignmentsInfo(assignments))
+             .then(() => getAssignmentsInfo(assignments, ln))
              .then((res) => bot.sendMessage(msg.chat.id, res))
 
     },
@@ -182,10 +182,10 @@ module.exports = {
 
         return userReq.request()
             .catch(err => {
-                bot.sendMessage(msg.chat.id, 'internal error', keyboardOptions[ln]);
+                bot.sendMessage(msg.chat.id, internalError[ln], keyboardOptions[ln]);
                 throw err;
             })
-            .then(response => userInfo(response.data, facultyId, msg.from.id.toString()))
+            .then(response => userInfo(response.data, facultyId, msg.from.id.toString(), ln))
             .catch(err => {
                 bot.sendMessage(msg.chat.id, err, keyboardOptions[ln]);
                 throw err;
@@ -196,10 +196,10 @@ module.exports = {
 
                 return gradesReq.request()
                     .catch(err => {
-                        bot.sendMessage(msg.chat.id, 'internal error', keyboardOptions[ln]);
+                        bot.sendMessage(msg.chat.id, internalError[ln], keyboardOptions[ln]);
                         throw err;
                     })
-                    .then(response => getGrades(response.data))
+                    .then(response => getGrades(response.data, ln))
                     .then(res => bot.sendMessage(msg.chat.id, res, keyboardOptions[ln]))
 
             });
@@ -209,7 +209,7 @@ module.exports = {
 
     invalidFacultyNumber : function(bot, msg, ln){
 
-        return bot.sendMessage(msg.chat.id, 'Invalid faculty number', keyboardOptions[ln]);
+        return bot.sendMessage(msg.chat.id, invalidFn[ln], keyboardOptions[ln]);
 
     }
 
@@ -218,7 +218,7 @@ module.exports = {
 
 //used to replace <p> and other tags
 //in order to make a valid html for parse mode
-replaceAll = (str, find, replace) => {
+const replaceAll = (str, find, replace) => {
     return str.replace(new RegExp(find, 'g'), replace);
 }
 
@@ -245,17 +245,18 @@ const fetchDiscussions = () => {
 }
 
 
-const getAssignmentsInfo = (assignments) => {
+const getAssignmentsInfo = (assignments, ln) => {
 
-    let res = 'Предстоящите ви задания са : \n\n';
+    let res = ln ? 'Предстоящите ви задания са 🗓️ : \n\n' 
+                 : 'Your upcoming assignments are 🗓️ : \n\n';
 
     //TO DO filter
-    assignments.forEach(assign => res += formatAssigment(assign));
+    assignments.forEach(assign => res += formatAssignment(assign));
     
     return res;
 }
 
-const formatAssigment = (assignment) => {
+const formatAssignment = (assignment) => {
 
     return assignment.name + '\n'
         + 'от : \n'
@@ -287,39 +288,50 @@ const getTittles = (discussions) => {
 }
 
 //a helper function to get personal data of a user
-const userInfo = (users, facultyId, fromId) =>{
+const userInfo = (users, facultyId, fromId, ln) =>{
+
+    if(users === undefined)
+        throw internalError[ln];
 
     let user = users.find(el => el.idnumber === facultyId);
 
     //this faculty number is not enrolled in the course
     if(user === undefined)
-        throw "Access denied : Not enrolled!";
+        throw accessDeniedEnrol[ln];
 
-    // let telegramId = 
-    if(user.customfields === undefined)
-        throw "Access denied : Moodle profile is not configured!";
+    
+    //if(user.customfields === undefined)
+      //  throw "Access denied : Moodle profile is not configured!";
 
-    let telegramId = user.customfields.find(el => el.shortname === "telegramid").value;
+    //let telegramId = user.customfields.find(el => el.shortname === "telegramid").value;
 
-    if(telegramId === undefined || telegramId !== fromId)
-        throw "Access denied : Moodle profile is not configured!";
+    let telegramId = user.skype;
+
+    if(telegramId === undefined)
+        throw accessDeniedMoodleConfig[ln];
+
+    if(telegramId !== fromId)
+        throw accessDeniedOtherFn[ln];
 
     return user.id;
 }
 
 //a helper to get all grades for a user
-const getGrades = (user) => {
+const getGrades = (user, ln) => {
 
 
     let arrGrades = user.usergrades[0].gradeitems;
 
-    return formatGradesAnswer(arrGrades);
+    return formatGradesAnswer(arrGrades, ln);
 
 }
 
-const formatGradesAnswer = (arrGrades) => {
+//a helper function used for formating the answer with
+//a user's grades
+const formatGradesAnswer = (arrGrades, ln) => {
 
-    let res = "";
+    let res = ln ? "Оценките, които имаме за теб са 🏫 :\n"
+                 :  "Your grades are 🏫 :\n" ;
 
     arrGrades.forEach(el => {
 

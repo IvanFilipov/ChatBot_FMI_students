@@ -15,29 +15,26 @@ class Config {
         //take all arguments from the command line
         nconf.argv();
 
-        nconf.required(['bToken','mToken']);
+        nconf.required(['bToken', 'mToken']);
 
-           //loading all config data
+        //loading all config data
         nconf.add('conf', { type: 'file', file: '../info_base/config.json' });
 
         //will throw an error if any key is missing
-        nconf.required(['externalLinks', 'questionsPath', 'externalLinks:courseInfo',
-            'externalLinks:teamInfo', 'externalLinks:booksInfo', 'externalLinks:themesInfo',
-            'externalLinks:helpBG', 'externalLinks:helpEN']);
+        nconf.required(['externalLinks', 'questionsPath', 'moodleConfig']);
 
 
 
         //loading all questions
-        nconf.add('quest', { type: 'file', file: nconf.get('questionsPath')});
+        nconf.add('quest', { type: 'file', file: nconf.get('questionsPath') });
         //adding it to the required fields
         nconf.required(['questions']);
-     
+
     }
 
     get(key) {
 
         return nconf.get(key);
-
     }
 
 }

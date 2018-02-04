@@ -44,8 +44,7 @@ bot.on('polling_error', (err) => {
 bot.onText(/\/start/, (msg) => {
     
     //saving user preferences
-    if (usersLangs[msg.chat.id] === undefined)
-        usersLangs[msg.chat.id] = BG; //default language is bulgarian
+    usersLangs[msg.chat.id] = BG; //default language is bulgarian
 
     msgHandlers.welcome(bot, msg)
                 .then(() => logger.info('WELCOME ' + msg.chat.id + ' OK'))
@@ -185,8 +184,11 @@ bot.on('message', (msg) => {
 
         case enumOptions.P_INFO_INDEX:
 
-            bot.sendMessage(msg.chat.id, 'please enter your faculty number', {
-                reply_markup: JSON.stringify({
+            let answer = ln ? 'моля, въведи факултетния си номер 🎓'
+                            : 'please, enter your faculty number 🎓';
+
+            bot.sendMessage(msg.chat.id, answer, {
+                reply_markup: JSON.stringify({ //hides the keyboard
                     hide_keyboard: true
                 })
             });

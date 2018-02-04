@@ -138,21 +138,21 @@ module.exports = {
                     [
                         {
                             text: 'За курса',
-                            url: 'https://docs.google.com/document/d/1UaaONmxmHAJXpL4RcGcgMSptBVLR4guacb45CdYN770'
+                            url: externalLinks.courseInfo
                         },
                         {
                             text: 'екип & контакти',
-                            url: 'https://docs.google.com/document/d/1UaaONmxmHAJXpL4RcGcgMSptBVLR4guacb45CdYN770'
+                            url: externalLinks.teamInfo
                         }
                     ],
                     [
                         {
                             text: 'книги & връзки',
-                            url: 'https://docs.google.com/document/d/1Q9P_YwHMFULFn84VK-VLggO0JOmGs3Cn-B9klSmIrJs'
+                            url: externalLinks.booksInfo
                         },
                         {
                             text: 'конспект',
-                            url: 'https://docs.google.com/document/d/1tKRmULwk2tb_iKXIGD3jDqSNRlFidCDBv8WipIGMzyo'
+                            url: externalLinks.themesInfo
                         }
                     ]
                 ]
@@ -163,9 +163,9 @@ module.exports = {
     //messages for picking a choice 
     chose : [
 
-        'Chose from below :'
+        'Chose from below 🔗 :'
         ,
-        'Изберете от опциите :'
+        'Изберете от опциите 🔗 :'
     ],
 
     //messages for unknown commands
@@ -182,7 +182,56 @@ module.exports = {
         'Вече си говорим на български! 🇧🇬'
     ],
 
-    //links to instant view
+    //message for invalid faculty number
+    invalidFn :[
+        'Invalid faculty number! ⚠️'
+        ,
+        'Невалиден факултетен номер! ⚠️'
+    ],
+
+    //message for internal error
+    internalError :[
+
+        'Internal error, please excuse us! 🙇\nwrite about the problem : email'
+        ,
+        'Вътрешна грешка, моля да ни извините! 🙇\nпишете ни за проблема : майл'
+
+    ],
+
+    //messages for access denied error
+    accessDeniedEnrol :[
+
+        'Access denied : Not enrolled! ⛔'
+        ,
+        'Достъпът отказан : Не сте записан за този курс! ⛔'
+
+    ],
+
+    accessDeniedOtherFn :[
+
+        'Access denied : This is not your account! 🚫'
+        ,
+        'Достъпът отказан : Това не е вашият профил! 🚫'
+
+    ],
+
+    accessDeniedMoodleConfig :[
+        
+        'Access denied : Moodle profile is not configured! ⚠️'
+        ,
+        'Достъпът отказан : Профилът ви в moodle не е конфигуриран! ⚠️'
+
+    ],
+
+    //message for get news
+    news :[
+
+        'These are the tittles of forum news, click on a tittle to read it\'s contain 📃\n'
+        ,
+        'Това са заглавията на новините от форума, кликнете на някое заглавиe, за да получите съдържанието на новината 📃\n'
+
+    ],
+    //links to instant views
     //urls with how to use information
     helpUrl : [
         '[click here]' + externalLinks.helpEN
