@@ -11,9 +11,12 @@ const {
 
 
 const { forumReq, assignReq,
-        userReq, gradesReq } = require('./moodleAPI');
+        userReq, gradesReq,
+        coursesReq, updatesReq } = require('./moodleAPI');
 
-//each function will return a promise
+//each function will handle a message
+//received by the bot
+//and will return a promise
 module.exports = {
 
     welcome: function (bot, msg) {
@@ -21,12 +24,12 @@ module.exports = {
         const answerEN = 'Welcome, ' 
             + msg.chat.first_name + ' '
             + msg.chat.last_name + '!' 
-            + '\nI am the FMI\'s chat bot, click below to see how to communicate with me 😎';
+            + '\nI am the FMI\'s chat bot 🤖, click below to see how to communicate with me 😎';
 
         const answerBG = 'Здравей, ' 
             + msg.chat.first_name + ' '
             + msg.chat.last_name + '!'
-            + '\nАз съм чатботът на ФМИ, кликни на линка отдолу за да '
+            + '\nАз съм чатботът на ФМИ 🤖, кликни на линка отдолу за да '
             + 'видиш как най - лесно да комуникираш с мен 😎';
 
 
@@ -124,23 +127,20 @@ module.exports = {
 
         let question = questionsList[qIndex][ln];
 
-        let answer = questionRender(question, ln);
+        let answer = formatQuestion(question, ln);
 
         return bot.sendMessage(msg.chat.id, answer, testKeyboardOptions[ln])
             .then(() => callBacks[msg.chat.id] = [qIndex, question.correctAnswer]);
     },
 
 
-    getNews : function (bot, msg, ln){
+    getNews: function (bot, msg, ln) {
 
-        return fetchDiscussions()
-            .catch(err => {
+        if (discussions.length === 0)
+            return bot.sendMessage(msg.chat.id, internalError[ln]);
 
-                bot.sendMessage(msg.chat.id, internalError[ln]);
-                throw err;
-            })
-            .then(() => getTittles(discussions))
-            .then((res) => bot.sendMessage(msg.chat.id, news[ln], res))
+        let res = getTittles(discussions);
+        return bot.sendMessage(msg.chat.id, news[ln], res);
 
     },
 
@@ -165,69 +165,91 @@ module.exports = {
 
          //console.log(assignments);
 
-         return fetchAssignments()
-             .catch(err => {
- 
-                 bot.sendMessage(msg.chat.id, internalError[ln]);
-                 throw err;
-             })
-             .then(() => getAssignmentsInfo(assignments, ln))
-             .then((res) => bot.sendMessage(msg.chat.id, res))
+        if (assignments.length === 0)
+            return bot.sendMessage(msg.chat.id, internalError[ln]);
+         
+        let res = getAssignmentsInfo(assignments, ln);
+        return bot.sendMessage(msg.chat.id, res);
 
     },
 
-    personalInfo: function (bot, msg, ln){
+    personalInfo: function (bot, msg, ln) {
 
         let facultyId = msg.text;
+        let courseid = gradesReq.defaults.params['courseid'];
+        let userid;
+
+        userReq.defaults.params['values'] = [facultyId];
 
         return userReq.request()
-            .catch(err => {
-                bot.sendMessage(msg.chat.id, internalError[ln], keyboardOptions[ln]);
-                throw err;
-            })
-            .then(response => userInfo(response.data, facultyId, msg.from.id.toString(), ln))
-            .catch(err => {
-                bot.sendMessage(msg.chat.id, err, keyboardOptions[ln]);
-                throw err;
-            })
-            .then(userid => {
-                //setting the current request parameter
-                gradesReq.defaults.params['userid'] = userid;
+            .then(response => {
 
-                return gradesReq.request()
-                    .catch(err => {
-                        bot.sendMessage(msg.chat.id, internalError[ln], keyboardOptions[ln]);
-                        throw err;
-                    })
-                    .then(response => getGrades(response.data, ln))
-                    .then(res => bot.sendMessage(msg.chat.id, res, keyboardOptions[ln]))
+                try {
+                    coursesReq.defaults.params['userid'] =
+                        checkUserTelegram(response.data[0], msg.from.id.toString(), ln);
+                }
+                catch (err) { //authentication error
+                    bot.sendMessage(msg.chat.id, err, keyboardOptions[ln]);
+                    throw err;
+                }
 
+                return coursesReq.request();
+
+            })
+            .then(response => {
+
+                let courses = response.data;
+
+                let ind = courses.find(el => el.id === courseid);
+
+                if (ind === undefined) {
+                    
+                    bot.sendMessage(msg.chat.id, accessDeniedEnrol[ln], keyboardOptions[ln]);
+                    throw accessDeniedEnrol[ln];
+                }
+
+                gradesReq.defaults.params['userid'] =
+                    coursesReq.defaults.params['userid'];
+
+                return gradesReq.request();
+
+            })
+            .then(response => formatGradesAnswer(response.data, ln))
+            .then(res => bot.sendMessage(msg.chat.id, res, keyboardOptions[ln]))
+            .catch(err => {
+
+                if (err.code !== undefined) {
+                    bot.sendMessage(msg.chat.id, internalError[ln], keyboardOptions[ln]);
+                    throw err.code;
+                }
+
+                throw err;
             });
-
-
     },
 
-    invalidFacultyNumber : function(bot, msg, ln){
+    invalidFacultyNumber: function (bot, msg, ln) {
 
         return bot.sendMessage(msg.chat.id, invalidFn[ln], keyboardOptions[ln]);
 
+    },
+
+    update: function () {
+
+        return fetchDiscussions()
+            .then(fetchAssignments())
     }
+    
 
 };
 
 
-//used to replace <p> and other tags
-//in order to make a valid html for parse mode
-const replaceAll = (str, find, replace) => {
-    return str.replace(new RegExp(find, 'g'), replace);
-}
-
 //will hold all forum's discussions
 let discussions = [];
-//will hold all forum's assignments
+//will hold all assignments
 let assignments = [];
 
-
+//makes a request to moodule in order to get 
+//all course assignments
 const fetchAssignments = () => {
 
     return assignReq.request()
@@ -242,27 +264,6 @@ const fetchDiscussions = () => {
     return forumReq.request()
         .then(response => discussions = response.data.discussions);
 
-}
-
-
-const getAssignmentsInfo = (assignments, ln) => {
-
-    let res = ln ? 'Предстоящите ви задания са 🗓️ : \n\n' 
-                 : 'Your upcoming assignments are 🗓️ : \n\n';
-
-    //TO DO filter
-    assignments.forEach(assign => res += formatAssignment(assign));
-    
-    return res;
-}
-
-const formatAssignment = (assignment) => {
-
-    return assignment.name + '\n'
-        + 'от : \n'
-        + 'до : \n'
-        + 'къде : в мудъл \n'
-        + '\n\n';
 }
 
 //a helper function to get tittles of news in forum
@@ -287,25 +288,17 @@ const getTittles = (discussions) => {
     return opts;
 }
 
-//a helper function to get personal data of a user
-const userInfo = (users, facultyId, fromId, ln) =>{
+//a helper function to check fn - telegram id 
+//personal data of a user
+const checkUserTelegram = (user, fromId, ln) =>{
 
-    if(users === undefined)
-        throw internalError[ln];
-
-    let user = users.find(el => el.idnumber === facultyId);
-
-    //this faculty number is not enrolled in the course
     if(user === undefined)
-        throw accessDeniedEnrol[ln];
-
+        throw invalidFn[ln];
     
-    //if(user.customfields === undefined)
-      //  throw "Access denied : Moodle profile is not configured!";
+    if(user.customfields === undefined) 
+        throw accessDeniedMoodleConfig[ln];
 
-    //let telegramId = user.customfields.find(el => el.shortname === "telegramid").value;
-
-    let telegramId = user.skype;
+    let telegramId = user.customfields.find(el => el.shortname === "telegramid").value;
 
     if(telegramId === undefined)
         throw accessDeniedMoodleConfig[ln];
@@ -316,38 +309,79 @@ const userInfo = (users, facultyId, fromId, ln) =>{
     return user.id;
 }
 
-//a helper to get all grades for a user
-const getGrades = (user, ln) => {
+const getAssignmentsInfo = (assignments, ln) => {
 
+    let res = ln ? 'Предстоящите ви задания са 🗓️ : \n\n' 
+                 : 'Your upcoming assignments are 🗓️ : \n\n';
 
-    let arrGrades = user.usergrades[0].gradeitems;
+    //UTC current time
+    let currTime = Math.floor((new Date()).getTime() / 1000);
 
-    return formatGradesAnswer(arrGrades, ln);
+    assignments.filter(assign => assign.duedate > currTime)
+               .forEach(assign => res += formatAssignment(assign, ln));
 
+    return res;
 }
+
+const formatAssignment = (assignment, ln) => {
+
+    let helpWords = [['\n\nfrom : ', '\nto : ', '\nwhere : '],
+                     ['\n\nот : ', '\nдо : ', '\nкъде : ']];
+
+    //UNIX timestamp is in seconds ... JS's is in milliseconds
+    let timeDiff = 120 * 60, //BG is +2GMT
+        from = (assignment.allowsubmissionsfromdate + timeDiff) * 1000,
+        to = (assignment.duedate + timeDiff) * 1000;
+
+    let fromTimeFormated = (new Date(from)).toUTCString().slice(0, -4), //removes " GMT"
+        dueTimeFormated = (new Date(to)).toUTCString().slice(0, -4); 
+    
+    let where = 'moodle';
+
+    let start = assignment.intro.indexOf('Ще проведем');
+
+    if(start > 0){
+
+        start = assignment.intro.indexOf('в ');
+        let end = assignment.intro.indexOf('.');
+
+        where = assignment.intro.slice(start, end);
+    }
+
+    return assignment.name
+        + helpWords[ln][0] + fromTimeFormated
+        + helpWords[ln][1] + dueTimeFormated
+        + helpWords[ln][2] + where
+        + '\n\n';
+}
+
 
 //a helper function used for formating the answer with
 //a user's grades
-const formatGradesAnswer = (arrGrades, ln) => {
+const formatGradesAnswer = (user, ln) => {
 
     let res = ln ? "Оценките, които имаме за теб са 🏫 :\n"
                  :  "Your grades are 🏫 :\n" ;
 
-    arrGrades.forEach(el => {
+    let arrGrades = user.usergrades[0].gradeitems;
 
-        res += el.itemname + '\n'
-            + el.gradeformatted + ' / ' 
-            + el.grademax + '\n\n';
+    arrGrades.forEach(el => {
+        //skip overall grade
+        if (el.itemname !== null) { 
+
+            res += el.itemname + '\n'
+                + el.gradeformatted + ' / '
+                + el.grademax + '\n\n';
+        }
 
     })
 
     return res;
 }
 
-
 //a helper function to represent a question
 //as a test
-const questionRender = (question, ln) => {
+const formatQuestion = (question, ln) => {
 
     let format = [
 
@@ -368,5 +402,10 @@ const questionRender = (question, ln) => {
 const getRandomInt = (max) => {
 
     return Math.floor(Math.random() * Math.floor(max));
+}
 
+//used to replace <p> and other tags
+//in order to make a valid html for parse mode
+const replaceAll = (str, find, replace) => {
+    return str.replace(new RegExp(find, 'g'), replace);
 }

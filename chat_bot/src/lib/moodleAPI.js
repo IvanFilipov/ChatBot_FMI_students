@@ -11,7 +11,7 @@ const forumReq = axios.create({
     url : moodleConfig.serviceUrl ,
     baseURL: moodleConfig.baseUrl,
     method : 'get',
-    timeout: 2000,
+    timeout: 5000,
 
     params: {
         wstoken: moodleToken,
@@ -27,7 +27,7 @@ const assignReq = axios.create({
     url : moodleConfig.serviceUrl ,
     baseURL: moodleConfig.baseUrl,
     method : 'get',
-    timeout: 10000,
+    timeout: 5000,
 
     params: {
         wstoken: moodleToken,
@@ -48,11 +48,29 @@ const userReq = axios.create({
     params: {
         wstoken: moodleToken,
         wsfunction : moodleConfig.fun_user,
-        courseid : moodleConfig.courseid,
+        field : moodleConfig.field,
+        values : [0],
         moodlewsrestformat : 'json'
     },
     
 });
+
+const coursesReq = axios.create({
+
+    url : moodleConfig.serviceUrl ,
+    baseURL: moodleConfig.baseUrl,
+    method : 'get',
+    timeout: 10000,
+
+    params: {
+        wstoken: moodleToken,
+        wsfunction : moodleConfig.fun_courses,
+        userid : 0,
+        moodlewsrestformat : 'json'
+    },
+    
+});
+
 
 const gradesReq = axios.create({
 
@@ -71,5 +89,8 @@ const gradesReq = axios.create({
     
 });
 
-module.exports = { forumReq , assignReq, userReq, gradesReq };
+module.exports = {
+    forumReq, assignReq, userReq,
+    gradesReq, coursesReq
+};
      

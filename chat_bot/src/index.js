@@ -1,7 +1,9 @@
 const TelegramBot = require('node-telegram-bot-api'),
+      schedule = require('node-schedule'),
       msgHandlers = require('./lib/msgHandlers'),
       config = require('./lib/configuration'),
       logger = require('./lib/logger');
+
 
 const { 
     BG, EN, 
@@ -88,7 +90,7 @@ bot.onText(/\d+/, (msg, res) => {
 
     const ln = (usersLangs[msg.chat.id] === EN) ? EN : BG;
 
-    //informatics ids are at least 5 digits,
+    //faculty ids are at least 5 digits,
     //not handled by the regexp on purpose 
     if(res.input.length < 5){
 
@@ -215,4 +217,20 @@ bot.on('callback_query', callbackQuery => {
         .then(msg => logger.info('GET NEWS CONTAIN ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
     
+});
+
+
+//update all info on starting...
+msgHandlers.update()
+    .then(() => logger.info('UPDATE NEWS AND ASSIGNMENTS : OK'))
+    .catch(err => logger.error('UPDATE : ' + err.toString()));
+
+
+//try to update on every five minutes
+const updateJob = schedule.scheduleJob('*/5 * * * *', () => {
+
+    msgHandlers.update()
+        .then(() => logger.info('UPDATE NEWS AND ASSIGNMENTS : OK'))
+        .catch(err => logger.error('UPDATE : ' + err.toString()));
+
 });
