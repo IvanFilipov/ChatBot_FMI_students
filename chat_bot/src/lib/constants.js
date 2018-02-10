@@ -16,7 +16,7 @@ module.exports = {
     EN : 0,
     
     //all supported commands
-    commandList : ['/lang bg' , '/lang en', '/start', '/help'],
+    commandList : ['/lang_bg' , '/lang_en', '/start', '/help', '/key'],
 
     //all supported buttons / text messages
     buttonLists : [
@@ -230,6 +230,12 @@ module.exports = {
         ,
         'Това са заглавията на новините от форума, кликнете на някое заглавиe, за да получите съдържанието на новината 📃\n'
 
+    ],
+
+    keyInfo : [
+        'This is your telegram key for moodle 🔑 : '
+        ,
+        'Това е ключът ти за moodle 🔑 : '
     ],
     
     //links to instant views

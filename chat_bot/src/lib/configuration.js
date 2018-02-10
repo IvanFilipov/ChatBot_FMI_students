@@ -42,7 +42,7 @@ let config;
 try {
 
     config = new Config();
-
+    
 } catch (err) {
 
     console.error('FATAL ERROR WHILE INITIALIZATION : ' + err.toString());

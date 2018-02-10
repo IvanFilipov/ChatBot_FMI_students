@@ -9,6 +9,7 @@ const {
     internalError, news,
     accessDeniedEnrol, accessDeniedOtherFn,
     accessDeniedMoodleConfig,
+    keyInfo,
     EN,BG } = require('./constants');
 
 
@@ -23,16 +24,23 @@ module.exports = {
 
     welcome: function (bot, msg) {
 
-        const answerEN = 'Welcome, ' 
-            + msg.chat.first_name + ' '
-            + msg.chat.last_name + '!' 
-            + '\nI am the FMI\'s chat bot 🤖, click below to see how to communicate with me 😎';
+        //first name is required 
+        let name = msg.chat.first_name; 
 
-        const answerBG = 'Здравей, ' 
-            + msg.chat.first_name + ' '
-            + msg.chat.last_name + '!'
-            + '\nАз съм чатботът на ФМИ 🤖, кликни на линка отдолу за да '
-            + 'видиш как най - лесно да комуникираш с мен 😎';
+        if (msg.chat.last_name !== undefined)     
+            name += ' ' + msg.chat.last_name;
+            
+        const answerEN = `Welcome,${name}!\nI am the FMI\'s chat bot 🤖. \
+                        \n\n${keyInfo[EN]}${msg.from.id} \
+                        \n\nuse /lang_en to change the language to english 🇬🇧󠁧󠁢󠁥󠁮󠁧󠁿 \ 
+                        \nthen type /help to see how to configure your moodle profile \
+                        \nand how to communicate with me 😎`;
+
+
+        const answerBG = `Здравей,${name}!\nАз съм чатботът на ФМИ 🤖. \
+                        \n\n${keyInfo[BG]}${msg.from.id} \ 
+                        \nИзползвай /help за да видиш\nкак да конфигурираш своя moodle профил \
+                        \nи как най - лесно да комуникираш с мен 😎`;
 
 
         //because sendMessage changes its param
@@ -41,10 +49,7 @@ module.exports = {
         const optBG = JSON.parse(JSON.stringify(keyboardOptions[BG]));
 
         return bot.sendMessage(msg.chat.id, answerEN)//, optEN)
-            .then(() => this.help(bot, msg, EN))
             .then(() => bot.sendMessage(msg.chat.id, answerBG, optBG))
-            .then(() => this.help(bot, msg, BG));
-
     },
 
     langChanged: function (bot, msg, ln) {
@@ -226,10 +231,15 @@ module.exports = {
         return bot.sendMessage(msg.chat.id, invalidFn[ln], keyboardOptions[ln]);
     },
 
+    getMoodleKey : function (bot, msg, ln) {
+
+        return bot.sendMessage(msg.chat.id, keyInfo[ln] + msg.from.id, keyboardOptions[ln]);
+    },
+
     update: function () {
 
         return fetchDiscussions()
-            .then(fetchAssignments())
+            .then(() => { return fetchAssignments() })
     }
 };
 

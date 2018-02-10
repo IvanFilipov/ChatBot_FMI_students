@@ -51,7 +51,7 @@ bot.onText(/\/start/, (msg) => {
 });
 
 //handling language changes
-bot.onText(/\/lang (en|bg)/, (msg, res) => {
+bot.onText(/\/lang_(en|bg)/, (msg, res) => {
     //the result parameter is
     //the result of executing exec on the regular expression
 
@@ -97,6 +97,16 @@ bot.onText(/\d+/, (msg, res) => {
 
     msgHandlers.personalInfo(bot, msg, ln)
         .then(() => logger.info('PERSONAL INFO ' + msg.chat.id + ' OK'))
+        .catch(err => logger.error(err.toString()));
+})
+
+//handle key command
+bot.onText(/\/key/, (msg, res) => {
+
+    const ln = (usersLangs[msg.chat.id] === EN) ? EN : BG;
+
+    msgHandlers.getMoodleKey(bot, msg, ln)
+        .then(() => logger.info('MOODLE KEY ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
 })
 
