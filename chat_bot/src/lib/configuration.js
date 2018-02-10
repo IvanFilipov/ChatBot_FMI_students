@@ -2,8 +2,6 @@ const fs = require('fs'),
     path = require('path'),
     nconf = require('nconf');
 
-
-
 //a wrapper class for working with nconf
 class Config {
 
@@ -23,8 +21,6 @@ class Config {
         //will throw an error if any key is missing
         nconf.required(['externalLinks', 'questionsPath', 'moodleConfig']);
 
-
-
         //loading all questions
         nconf.add('quest', { type: 'file', file: nconf.get('questionsPath') });
         //adding it to the required fields
@@ -36,7 +32,6 @@ class Config {
 
         return nconf.get(key);
     }
-
 }
 
 //only one instance

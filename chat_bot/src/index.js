@@ -12,13 +12,10 @@ const {
     enumOptions
 } = require('./lib/constants');
 
+logger.info('STARTED');
 
 //getting the token from the argv
 const botToken = config.get('bToken');
-
-//logger.debug('console');
-logger.info('STARTED');
-logger.debug(botToken);
 
 //creating the bot context
 const bot = new TelegramBot(botToken, {polling: true});
@@ -32,26 +29,25 @@ let usersLangs = {};
 let callBacks = {};
 
 //polling error handler
-let OK = true;
+let online = true; //use to avoid multiple error logs
 bot.on('polling_error', (err) => {
    
-    if(OK){
+    if(online){
 
         logger.error(err.code);
-        OK = false;
+        online = false;
     }
 });
 
 //on first message ever
 bot.onText(/\/start/, (msg) => {
-    
-    //saving user preferences
+
+     //saving user preferences
     usersLangs[msg.chat.id] = BG; //default language is bulgarian
 
     msgHandlers.welcome(bot, msg)
-                .then(() => logger.info('WELCOME ' + msg.chat.id + ' OK'))
-                .catch(err => logger.error(err.toString()));
-
+        .then(() => logger.info('WELCOME ' + msg.chat.id + ' OK'))
+        .catch(err => logger.error(err.toString()));
 });
 
 //handling language changes
@@ -68,21 +64,19 @@ bot.onText(/\/lang (en|bg)/, (msg, res) => {
     msgHandlers.langChanged(bot, msg, ln)
         .then(() => logger.info('CHANGE LN ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
-
 });
 
 //handling /help option
 bot.onText(/\/help+/, (msg) => {
 
     //will match everything starting with help
-    
+
     //if undefined => bulgarian
     const ln = (usersLangs[msg.chat.id] === EN) ? EN : BG;
 
     msgHandlers.help(bot, msg, ln)
         .then(() => logger.info('HELP ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
-
 });
 
 //handling personal information by faculty number
@@ -92,20 +86,18 @@ bot.onText(/\d+/, (msg, res) => {
 
     //faculty ids are at least 5 digits,
     //not handled by the regexp on purpose 
-    if(res.input.length < 5){
+    if (res.input.length < 5) {
 
         msgHandlers.invalidFacultyNumber(bot, msg, ln)
             .then(() => logger.info('PERSONAL INFO ' + msg.chat.id + ' INVALID ID'))
             .catch(err => logger.error(err.toString()));
 
         return;
-
     }
 
     msgHandlers.personalInfo(bot, msg, ln)
         .then(() => logger.info('PERSONAL INFO ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
-
 })
 
 
@@ -113,7 +105,6 @@ bot.onText(/\d+/, (msg, res) => {
 
 bot.on('message', (msg) => {
 
-    
     OK = true; //back online
 
     //language of communication
@@ -131,7 +122,6 @@ bot.on('message', (msg) => {
             .catch(err => logger.error(err.toString()));;
 
        return;
-
     }
 
     //it is a known command, it should be handled somewhere else
@@ -196,27 +186,22 @@ bot.on('message', (msg) => {
             });
             return;
             
-
         default:
             //debug reason only...
             bot.sendMessage(msg.chat.id, msg.text + ' pressed!');
-
     }
-
 });
 
 
 // Handle callback queries from inline keyboard
 bot.on('callback_query', callbackQuery => {
 
-
     const wantedId = parseInt(callbackQuery.data);
     const msg = callbackQuery.message;
-    
+
     msgHandlers.getNewsContain(bot, msg, wantedId)
         .then(msg => logger.info('GET NEWS CONTAIN ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
-    
 });
 
 
@@ -232,5 +217,4 @@ const updateJob = schedule.scheduleJob('*/5 * * * *', () => {
     msgHandlers.update()
         .then(() => logger.info('UPDATE NEWS AND ASSIGNMENTS : OK'))
         .catch(err => logger.error('UPDATE : ' + err.toString()));
-
 });

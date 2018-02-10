@@ -1,3 +1,5 @@
+const htmlToText = require('html-to-text');
+
 const {
     keyboardOptions,
     unknownCommand, languageChanged,
@@ -67,7 +69,6 @@ module.exports = {
         return bot.sendMessage(msg.chat.id, chose[ln], generalInfo[ln]);
     },
 
-
     testCallback: function (bot, msg, ln, callBacks) {
 
         const ansOpt = ['ABCD', 'АБВГ'];
@@ -120,7 +121,6 @@ module.exports = {
         return bot.sendMessage(msg.chat.id, answerMsg, opt);
     },
 
-
     testMe: function (bot, msg, ln, callBacks) {
 
         let qIndex = getRandomInt(questionsList.length);
@@ -133,7 +133,6 @@ module.exports = {
             .then(() => callBacks[msg.chat.id] = [qIndex, question.correctAnswer]);
     },
 
-
     getNews: function (bot, msg, ln) {
 
         if (discussions.length === 0)
@@ -141,7 +140,6 @@ module.exports = {
 
         let res = getTittles(discussions);
         return bot.sendMessage(msg.chat.id, news[ln], res);
-
     },
 
     getNewsContain : function (bot, msg, action){
@@ -151,26 +149,22 @@ module.exports = {
         if(disc === undefined)
             return bot.sendMessage(msg.chat.id, 'Currently unavailable');
         
-        //basic HTML supported ...
-        let answer = replaceAll(disc.message,'<p.*?>','\n');
-        answer = replaceAll(answer,'</p>','');
-        answer = replaceAll(answer, '<br.*?/>', '\n');
+        //only basic HTML is supported ...
+        //all moodle discussions are formatted as HTML,
+        //so we need to convert them to plain text
+       let answer = htmlToText.fromString(disc.message);
 
-        return bot.sendMessage(msg.chat.id, answer, { parse_mode: "HTML" })
-               .catch(() => bot.sendMessage(msg.chat.id, disc.message)); // send raw .. :(
-            
+        return bot.sendMessage(msg.chat.id, answer)//, { parse_mode: "HTML" })
+               //.catch(() => bot.sendMessage(msg.chat.id, disc.message)); // send raw .. :(           
     },
 
     getAssignments : function (bot, msg, ln){
-
-         //console.log(assignments);
 
         if (assignments.length === 0)
             return bot.sendMessage(msg.chat.id, internalError[ln]);
          
         let res = getAssignmentsInfo(assignments, ln);
         return bot.sendMessage(msg.chat.id, res);
-
     },
 
     personalInfo: function (bot, msg, ln) {
@@ -230,7 +224,6 @@ module.exports = {
     invalidFacultyNumber: function (bot, msg, ln) {
 
         return bot.sendMessage(msg.chat.id, invalidFn[ln], keyboardOptions[ln]);
-
     },
 
     update: function () {
@@ -238,10 +231,7 @@ module.exports = {
         return fetchDiscussions()
             .then(fetchAssignments())
     }
-    
-
 };
-
 
 //will hold all forum's discussions
 let discussions = [];
@@ -309,6 +299,8 @@ const checkUserTelegram = (user, fromId, ln) =>{
     return user.id;
 }
 
+//a helper that returns all 
+//upcoming assignments formatted
 const getAssignmentsInfo = (assignments, ln) => {
 
     let res = ln ? 'Предстоящите ви задания са 🗓️ : \n\n' 
@@ -323,6 +315,7 @@ const getAssignmentsInfo = (assignments, ln) => {
     return res;
 }
 
+//a helper to format a single assignment
 const formatAssignment = (assignment, ln) => {
 
     let helpWords = [['\n\nfrom : ', '\nto : ', '\nwhere : '],
@@ -354,7 +347,6 @@ const formatAssignment = (assignment, ln) => {
         + helpWords[ln][2] + where
         + '\n\n';
 }
-
 
 //a helper function used for formating the answer with
 //a user's grades
@@ -404,8 +396,19 @@ const getRandomInt = (max) => {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
-//used to replace <p> and other tags
-//in order to make a valid html for parse mode
+//used to replace substring in a given string
 const replaceAll = (str, find, replace) => {
+
     return str.replace(new RegExp(find, 'g'), replace);
+}
+
+//a helper designed to removed unsupported HTML tags
+//currently unused
+const clearTags = (str) => {
+
+    let answer = replaceAll(str, '<p.*?>', '\n');
+    answer = replaceAll(answer, '</p>', '');
+    answer = replaceAll(answer, '<br.*?/>', '\n');
+
+    return answer;
 }
