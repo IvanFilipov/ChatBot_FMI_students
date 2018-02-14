@@ -161,22 +161,32 @@ module.exports = {
     ],
 
     //messages for picking a choice 
-    chose : [
+    choose : [
 
         'Chose from below 🔗 :'
         ,
-        'Изберете от опциите 🔗 :'
+        'Избери от опциите 🔗 :'
     ],
 
     //messages for unknown commands
     unknownCommand : [
+
         'I don\'t understand you 😓'
         ,
         'Не те разбирам 😓'
     ],
 
+    //messages for invalid test answer
+    invalidTestAnswer : [
+
+        'Sorry, but I don\'t understand your answer 🤔\nThe next time just press a button 🤓'
+        ,
+        'Съжалявам, но не мога да разбера отговора ти 🤔\nСледващия път просто натисни бутонче 🤓'
+    ],
+
     //messages for successful language change
     languageChanged :[
+
         'Now we are talking in english! 🇬🇧󠁧󠁢󠁥󠁮󠁧󠁿'
         ,
         'Вече си говорим на български! 🇧🇬'
@@ -184,6 +194,7 @@ module.exports = {
 
     //message for invalid faculty number
     invalidFn :[
+
         'Invalid faculty number! ⚠️'
         ,
         'Невалиден факултетен номер! ⚠️'
@@ -194,8 +205,7 @@ module.exports = {
 
         'Internal error, please excuse us! 🙇\nwrite about the problem : email'
         ,
-        'Вътрешна грешка, моля да ни извините! 🙇\nпишете ни за проблема : майл'
-
+        'Вътрешна грешка, моля да ни извиниш! 🙇\nпиши ни за проблема : майл'
     ],
 
     //messages for access denied error
@@ -203,15 +213,14 @@ module.exports = {
 
         'Access denied : Not enrolled! ⛔'
         ,
-        'Достъпът отказан : Не сте записан за този курс! ⛔'
-
+        'Достъпът отказан : Не си записан/а за този курс! ⛔'
     ],
 
     accessDeniedOtherFn :[
 
         'Access denied : This is not your account! 🚫'
         ,
-        'Достъпът отказан : Това не е вашият профил! 🚫'
+        'Достъпът отказан : Това не е твоят профил! 🚫'
 
     ],
 
@@ -219,8 +228,7 @@ module.exports = {
         
         'Access denied : Moodle profile is not configured! ⚠️'
         ,
-        'Достъпът отказан : Профилът ви в moodle не е конфигуриран! ⚠️'
-
+        'Достъпът отказан : Профилът ти в moodle не е конфигуриран! ⚠️'
     ],
 
     //message for get news
@@ -228,11 +236,11 @@ module.exports = {
 
         'These are the tittles of forum news, click on a tittle to read it\'s contain 📃\n'
         ,
-        'Това са заглавията на новините от форума, кликнете на някое заглавиe, за да получите съдържанието на новината 📃\n'
-
+        'Това са заглавията на новините от форума, кликни на някое заглавиe, за да получиш съдържанието на новината 📃\n'
     ],
 
     keyInfo : [
+
         'This is your telegram key for moodle 🔑 : '
         ,
         'Това е ключът ти за moodle 🔑 : '
@@ -243,6 +251,6 @@ module.exports = {
     helpUrl : [
         '[click here]' + externalLinks.helpEN
         ,
-        '[кликнете тук]' + externalLinks.helpBG
+        '[кликни тук]' + externalLinks.helpBG
     ]
 };

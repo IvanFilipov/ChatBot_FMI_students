@@ -4,13 +4,13 @@ const {
     keyboardOptions,
     unknownCommand, languageChanged,
     helpUrl, generalInfo,
-    chose, testKeyboardOptions,
+    choose, testKeyboardOptions,
     questionsList, invalidFn,
     internalError, news,
     accessDeniedEnrol, accessDeniedOtherFn,
     accessDeniedMoodleConfig,
-    keyInfo,
-    EN,BG } = require('./constants');
+    keyInfo, invalidTestAnswer,
+    EN, BG } = require('./constants');
 
 
 const { forumReq, assignReq,
@@ -30,7 +30,7 @@ module.exports = {
         if (msg.chat.last_name !== undefined)     
             name += ' ' + msg.chat.last_name;
             
-        const answerEN = `Welcome,${name}!\nI am the FMI\'s chat bot 🤖. \
+        const answerEN = `Welcome,${name}!\nI am the FMI\'s chatbot 🤖. \
                         \n\n${keyInfo[EN]}${msg.from.id} \
                         \n\nuse /lang_en to change the language to english 🇬🇧󠁧󠁢󠁥󠁮󠁧󠁿 \ 
                         \nthen type /help to see how to configure your moodle profile \
@@ -71,7 +71,7 @@ module.exports = {
 
     getGeneralInfo: function (bot, msg, ln) {
 
-        return bot.sendMessage(msg.chat.id, chose[ln], generalInfo[ln]);
+        return bot.sendMessage(msg.chat.id, choose[ln], generalInfo[ln]);
     },
 
     testCallback: function (bot, msg, ln, callBacks) {
@@ -105,8 +105,7 @@ module.exports = {
 
         //invalid answer
         if (userAnswer === -1)
-            return this.unknown(bot, msg, ln);
-
+            return bot.sendMessage(msg.chat.id, invalidTestAnswer[ln], keyboardOptions[ln]);t
 
         //wrong answer
         if (userAnswer !== -1 && userAnswer !== correctAnswer) {
