@@ -1,4 +1,14 @@
-const winston = require('winston');
+const winston = require('winston'),
+      config = require('./configuration'),
+      fs = require( 'fs' ),
+      path = require('path');
+
+const dirPath = config.get('logDirectoryPath');
+
+if ( !fs.existsSync( dirPath ) ) {
+    // Create the directory if it does not exist
+    fs.mkdirSync( dirPath );
+}
 
 //how to format the timestamp
 const tsFormat = () => {
@@ -29,7 +39,7 @@ const logger = new (winston.Logger)({
         //info logger config
         new (winston.transports.File)({
             name: 'info-file',
-            filename: '../log/info.log',
+            filename: path.join(dirPath, '/infoLog.txt'),
             level: 'info',
             json: false,
             formatter : formatFunc
@@ -38,7 +48,7 @@ const logger = new (winston.Logger)({
         //error logger config
         new (winston.transports.File)({
             name: 'error-file',
-            filename: '../log/error.log',
+            filename: path.join(dirPath, '/errorLog.txt'),
             level: 'error',
             json: false,
             formatter: formatFunc
@@ -48,4 +58,6 @@ const logger = new (winston.Logger)({
 });
 
 //logger.add(winston.transports.Console);
-module.exports = logger;
+try{
+module.exports = logger;}catch(err)
+ {console.log(11)};
