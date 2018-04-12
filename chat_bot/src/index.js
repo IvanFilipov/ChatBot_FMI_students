@@ -86,7 +86,7 @@ bot.onText(/\d+/, (msg, res) => {
 
     //faculty ids are at least 5 digits,
     //not handled by the regexp on purpose 
-    if (res.input.length < 5) {
+    if (res.input.length < 5 || res.input.length > 8) {
 
         msgHandlers.invalidFacultyNumber(bot, msg, ln)
             .then(() => logger.info('PERSONAL INFO ' + msg.chat.id + ' INVALID ID'))
@@ -222,7 +222,7 @@ msgHandlers.update()
 
 
 //try to update on every five minutes
-const updateJob = schedule.scheduleJob('*/5 * * * *', () => {
+const updateJob = schedule.scheduleJob('*/15 * * * *', () => {
 
     msgHandlers.update()
         .then(() => logger.info('UPDATE NEWS AND ASSIGNMENTS : OK'))
