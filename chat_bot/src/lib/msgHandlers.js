@@ -8,7 +8,7 @@ const {
     questionsList, invalidFn,
     internalError, news,
     accessDeniedEnrol, accessDeniedOtherFn,
-    accessDeniedMoodleConfig,
+    accessDeniedMoodleConfig, unseenFn,
     keyInfo, invalidTestAnswer,
     EN, BG } = require('./constants');
 
@@ -105,7 +105,7 @@ module.exports = {
 
         //invalid answer
         if (userAnswer === -1)
-            return bot.sendMessage(msg.chat.id, invalidTestAnswer[ln], keyboardOptions[ln]);t
+            return bot.sendMessage(msg.chat.id, invalidTestAnswer[ln], keyboardOptions[ln]);
 
         //wrong answer
         if (userAnswer !== -1 && userAnswer !== correctAnswer) {
@@ -292,7 +292,7 @@ const getTittles = (discussions) => {
 const checkUserTelegram = (user, fromId, ln) =>{
 
     if(user === undefined)
-        throw invalidFn[ln];
+        throw unseenFn[ln];
     
     if(user.customfields === undefined) 
         throw accessDeniedMoodleConfig[ln];
