@@ -200,6 +200,13 @@ module.exports = {
         'Невалиден факултетен номер! ⚠️'
     ],
 
+    unseenFn :[
+
+        'I can\'t see a student with such faculty number from this course! 👀'
+        ,
+        'Не "виждам" студент с такъв факултетен номер в този курс! 👀'
+    ],
+
     //message for internal error
     internalError :[
 
