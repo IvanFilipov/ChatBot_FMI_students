@@ -342,7 +342,7 @@ const formatAssignment = (assignment, ln) => {
 
     let start = assignment.intro.indexOf('Ще проведем');
 
-    if(start > 0){
+    if(start >= 0){
 
         start = assignment.intro.indexOf('в ');
         let end = assignment.intro.indexOf('.');
