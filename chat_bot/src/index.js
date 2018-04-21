@@ -28,6 +28,9 @@ let usersLangs = {};
 //map information for Test option 
 let callBacks = {};
 
+//will hold all bot's stickers
+let stickers = [];
+
 //polling error handler
 let online = true; //use to avoid multiple error logs
 bot.on('polling_error', (err) => {
@@ -98,7 +101,7 @@ bot.onText(/\d+/, (msg, res) => {
     msgHandlers.personalInfo(bot, msg, ln)
         .then(() => logger.info('PERSONAL INFO ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
-})
+});
 
 //handle key command
 bot.onText(/\/key/, (msg, res) => {
@@ -108,8 +111,7 @@ bot.onText(/\/key/, (msg, res) => {
     msgHandlers.getMoodleKey(bot, msg, ln)
         .then(() => logger.info('MOODLE KEY ' + msg.chat.id + ' OK'))
         .catch(err => logger.error(err.toString()));
-})
-
+});
 
 
 
@@ -129,11 +131,33 @@ bot.on('message', (msg) => {
 
         msgHandlers.testCallback(bot, msg, ln, callBacks)
             .then(() => logger.info('TEST CALLBACK ' + msg.chat.id + ' OK'))
-            .catch(err => logger.error(err.toString()));;
+            .catch(err => logger.error(err.toString()));
 
        return;
     }
 
+    if(msg.sticker !== undefined) {
+
+        let ans_sticker = stickers.find(el => el.emoji == msg.sticker.emoji);
+
+        if(ans_sticker === undefined) {
+
+            if(stickers.length !== 0) {
+
+                let index = Math.floor(Math.random() * Math.floor(stickers.length));
+                ans_sticker = stickers[index];
+            } else {
+
+                ans_sticker = msg.sticker;
+            }
+        }
+
+        bot.sendSticker(msg.chat.id, ans_sticker.file_id) 
+            .then(() => logger.info("sticker OK"))
+            .catch(() => logger.error("sticker PROBLEM"));
+        
+        return;
+    }
     //it is a known command, it should be handled somewhere else
     if(commandList.find((el) => el === msg.text) !== undefined ||
         msg.text.indexOf('/help') !== -1 || !isNaN(msg.text))
@@ -214,6 +238,12 @@ bot.on('callback_query', callbackQuery => {
         .catch(err => logger.error(err.toString()));
 });
 
+ 
+bot.getStickerSet('HackerBoyStickers')
+    .then(res => {
+
+        stickers = res.stickers;
+})
 
 //update all info on starting...
 msgHandlers.update()
