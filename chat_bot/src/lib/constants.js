@@ -210,9 +210,9 @@ module.exports = {
     //message for internal error
     internalError :[
 
-        'Internal error, please excuse us! 🙇\nwrite about the problem : email'
+        'Internal error, please excuse us! 🙇\nwrite us about the problem : fmichatbot@gmail.com'
         ,
-        'Вътрешна грешка, моля да ни извиниш! 🙇\nпиши ни за проблема : майл'
+        'Вътрешна грешка, моля да ни извиниш! 🙇\nпиши ни за проблема : fmichatbot@gmail.com'
     ],
 
     //messages for access denied error
