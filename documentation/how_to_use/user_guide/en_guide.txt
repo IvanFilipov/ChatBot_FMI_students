@@ -1,1 +1,55 @@
-some information about how to use written in english
+User guide how to use the chatbot
+Ivan Filipov
+Moodle configuration : 
+
+Enter your moodle profile, 
+
+Home -> Dashboard -> Preferences -> User account  -> Edit profile
+
+scroll down until you see "Other fields", click on it, find "Telegram ID" input form.
+
+Enter the key that you have receive from the chatbot. Save the changes.
+
+That's it, you are ready.
+
+
+
+Communication :
+
+Basically there are two ways of communication with the chatbot :
+
+1) Commands - for using a command just type it starting with a backslash
+
+*update - use only a backslash and the bot will provide you with all available commands.
+
+ Here is the full list of supported commands :
+
+ /help - an instant view / link with information how to use the bot
+
+ /lang_bg - switch to Bulgarian
+
+ /lang_en - switch to English
+
+/key - personal key for moodle
+
+ /start - restart the conversation
+
+
+
+2) Buttons - just press a button from the menu to get the information you want in the fastest possible way.
+
+  The buttons are :
+
+  - News - gives you a list with all heading from moodle's forum. Click on a heading to receive the whole new information.
+
+  - Assignments - a list with upcoming assignments, where and when they will be.
+
+  - Personal information - you will be asked about your faculty number and if you have configured your moodle account properly, you will receive all your available grades.
+
+  - General information - gives you four links to resources related with the course.  
+
+  - Test my knowledge - A/B/C or D test questions
+
+Try sending a sticker to the bot :)
+
+E-mail : fmichatbot@gmail.com
