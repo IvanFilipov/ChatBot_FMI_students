@@ -158,6 +158,15 @@ bot.on('message', (msg) => {
         
         return;
     }
+
+    if(msg.text === undefined) {
+
+        msgHandlers.unknown(bot, msg, ln)
+        .then(msg => logger.info('UNKNOWN ' + msg.chat.id + ' OK'))
+        .catch(err => logger.error(err.toString()));
+        return;
+    }
+
     //it is a known command, it should be handled somewhere else
     if(commandList.find((el) => el === msg.text) !== undefined ||
         msg.text.indexOf('/help') !== -1 || !isNaN(msg.text))

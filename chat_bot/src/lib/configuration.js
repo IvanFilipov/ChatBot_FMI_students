@@ -13,8 +13,10 @@ class Config {
         //take all arguments from the command line
         nconf.argv();
 
-        nconf.required(['bToken', 'mToken', 'configFile']);
+        nconf.required(['pName','bToken', 'mToken', 'configFile']);
 
+        process.title = nconf.get('pName'); //process rename better DevOps
+        
         //loading all config data
         nconf.add('conf', { type: 'file', file: nconf.get('configFile')});
 

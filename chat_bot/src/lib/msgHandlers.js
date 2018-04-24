@@ -146,7 +146,7 @@ module.exports = {
         return bot.sendMessage(msg.chat.id, news[ln], res);
     },
 
-    getNewsContain : function (bot, msg, action){
+    getNewsContain : function (bot, msg, action) {
 
         let disc = discussions.find(el => el.id === action);
 
@@ -162,7 +162,7 @@ module.exports = {
                //.catch(() => bot.sendMessage(msg.chat.id, disc.message)); // send raw .. :(           
     },
 
-    getAssignments : function (bot, msg, ln){
+    getAssignments : function (bot, msg, ln) {
 
         if (assignments.length === 0)
             return bot.sendMessage(msg.chat.id, internalError[ln]);
@@ -289,7 +289,7 @@ const getTittles = (discussions) => {
 
 //a helper function to check fn - telegram id 
 //personal data of a user
-const checkUserTelegram = (user, fromId, ln) =>{
+const checkUserTelegram = (user, fromId, ln) => {
 
     if(user === undefined)
         throw unseenFn[ln];
@@ -312,14 +312,21 @@ const checkUserTelegram = (user, fromId, ln) =>{
 //upcoming assignments formatted
 const getAssignmentsInfo = (assignments, ln) => {
 
-    let res = ln ? 'Предстоящите ви задания са 🗓️ : \n\n' 
-                 : 'Your upcoming assignments are 🗓️ : \n\n';
-
     //UTC current time
     let currTime = Math.floor((new Date()).getTime() / 1000);
 
-    assignments.filter(assign => assign.duedate > currTime)
-               .forEach(assign => res += formatAssignment(assign, ln));
+    let upcomingAssignments =  assignments.filter(assign => assign.duedate > currTime);
+
+    if(upcomingAssignments.length === 0){
+
+        return ln ? "Нямаш предстоящи задания, можеш да си починеш 🙃"
+                  : "There aren\'t any assignments, you can have a rest 🙃"  
+    }
+
+    let res = ln ? 'Предстоящите ти задания са 🗓️ : \n\n' 
+                 : 'Your upcoming assignments are 🗓️ : \n\n';
+   
+    upcomingAssignments.forEach(assign => res += formatAssignment(assign, ln));
 
     return res;
 }
@@ -331,7 +338,7 @@ const formatAssignment = (assignment, ln) => {
                      ['\n\nот : ', '\nдо : ', '\nкъде : ']];
 
     //UNIX timestamp is in seconds ... JS's is in milliseconds
-    let timeDiff = 120 * 60, //BG is +2GMT
+    let timeDiff = 180 * 60, //BG is +2GMT
         from = (assignment.allowsubmissionsfromdate + timeDiff) * 1000,
         to = (assignment.duedate + timeDiff) * 1000;
 
