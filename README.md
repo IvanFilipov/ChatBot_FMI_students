@@ -7,7 +7,7 @@ written as a project assignment during the FMI's JavaScript Advanced 17/18 cours
 
 fast links :<br/>
   [idea](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/en_idea.txt)<br/>
-  [how to use](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use)<br/>
+  [how to use](http://telegra.ph/User-guide-how-to-use-the-chatbot-01-03)<br/>
 
 ## repository organization : 
 
@@ -31,7 +31,7 @@ fast links :<br/>
 
 бързи връзи :<br/>
   [идеята](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/idea/бг_идея.txt)<br/>
-  [как да използваме](https://github.com/IvanFilipov/ChatBot_FMI_students/tree/master/documentation/how_to_use)
+  [как да използваме](http://telegra.ph/Narchnik-za-izpolzvane-na-bota-01-03)
 
 ## организация на хранилището : 
 
